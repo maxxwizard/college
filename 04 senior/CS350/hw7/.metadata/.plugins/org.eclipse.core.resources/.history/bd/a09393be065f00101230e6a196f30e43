@@ -1,0 +1,19 @@
+
+public class BadThread extends MyThread {
+
+	public BadThread(int i) {
+		super(i);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	void EnterCS() {
+		// do nothing
+	}
+
+	@Override
+	void ExitCS() {
+		// do nothing
+	}
+
+}

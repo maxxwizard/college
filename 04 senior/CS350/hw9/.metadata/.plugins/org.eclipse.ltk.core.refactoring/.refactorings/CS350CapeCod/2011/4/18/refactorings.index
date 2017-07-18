@@ -1,0 +1,10 @@
+1303765729093	Delete element
+1303765732604	Delete element
+1303765735884	Delete element
+1303765738950	Delete element
+1303767906731	Rename field 'numClients'
+1303767912440	Rename field 'numRequests'
+1303768128622	Rename type 'ClientThread'
+1303768442847	Delete element
+1303769693613	Rename type 'CameraThread'
+1303775784807	Rename local variable 'clientThreads'

@@ -1,0 +1,44 @@
+# Matthew Huynh
+# CS410 - West
+# Assignment 2
+
+# compiler/linker
+CC = cc
+LD = cc
+
+LIBS = -lreadline
+
+RL_LIBRARY_VERSION = 6.1
+READLINE_LIB = readline/libreadline.a
+HISTORY_LIB = readline/libhistory.a
+
+TERMCAP_LIB = -ltermcap
+
+INCLUDES = -I. -Ireadline
+
+CCFLAGS = -g -DREADLINE_LIBRARY -DRL_LIBRARY_VERSION='"$(RL_LIBRARY_VERSION)"' $(INCLUDES)
+
+# flags to pass to the C compiler
+LDFLAGS = -g $(LIBS)
+
+# top-level rule
+all: myshell
+
+# myshell executable (statically linked to readline and history libraries)
+myshell: myshell.o $(READLINE_LIB)
+	$(LD) $(LDFLAGS) -O -o $@ myshell.o $(READLINE_LIB) $(TERMCAP_LIB)
+
+# compile C source files into object files
+.c.o:
+	$(CC) $(CCFLAGS) -c $<
+
+#myshell.o: readline/readline.h
+
+# clean the directory of object files
+clean:
+	-rm -f *.o
+
+# clean the directory of object files and executables
+cleanall:
+	-rm -f *.o
+	-rm myshell

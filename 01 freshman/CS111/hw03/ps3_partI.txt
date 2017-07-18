@@ -1,0 +1,45 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+a. for (int i = 5; i <= 15; i += 2) { 
+       System.out.print(i + " ");
+   }
+
+b. for (int i = 1; i <= 3; i++) {
+       for (int j = i; j >= 0; j--) { 
+           System.out.println(i + " " + j);
+       }
+   }
+
+2)
+
+a.
+1. As always, execution begins with the main method.
+2. The first line of main is executed, which declares the variable m and assigns it the value 5.
+3. To prepare for the method call in the second line, the actual parameters are evaluated to give
+	int n = mystery(15, 4) + 2;
+
+4. The method call is made and the actual parameters replace the formal parameters of the method.
+5. The method's first line is executed so it evaluates to:
+	a = 15 + 4;
+6. The variable a is now assigned the value 19.
+7. The second line of the method is evaluated to:
+	return 2 * 19;
+8. The method returns a value of 38 so line 2 of the main method continues evaluating:
+	int n = 38 + 2;
+9. The variable n is assigned the value 40.
+10. The 3rd line of the main method is evaluated to:
+	System.out.println(5 + " " + 40);
+11. The String is printed out to the console.
+
+b. public static int sumPositiveInts(int n) {
+       int sum = 0;
+       for (int i = 1; i <= n; i++) {
+           sum += i;
+       }
+       return sum;
+   }
+
+c. sum = sumPositiveInts(20);

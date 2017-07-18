@@ -1,0 +1,75 @@
+/*
+ * A class that represents an empty cell (a Cell without a mine).
+ */
+public class EmptyCell extends Cell {
+    
+    public EmptyCell(Minesweeper game, int row, int col) {
+        super(game, row, col);
+    }
+    
+    /*
+     * Reveals the empty cell and all nearby empty cells.
+     */
+    public void reveal() {
+        /*
+        // cycle through cells in column up
+        if (super.isValid(super.getRow()-1, super.getColumn())) {
+            // get the current cell
+            Cell current = super.getGame().getCell(super.getRow()-1, super.getColumn());
+            // position at top-left of 3x3 cell array
+            for (int r = super.getRow() - 1; r <= super.getRow() + 1; r++) {
+                for (int c = super.getColumn() - 1; c <= super.getColumn() + 1; c++) {
+                    // if cell is valid
+                    if (isValid(r, c))  {
+                        // retrieve it
+                        Cell neighbor = super.getGame().getCell(r, c);
+                        // if cell doesn't contain a mine, isn't revealed, and isn't marked
+                        if (!neighbor.containsMine() && !neighbor.isMarked() && neighbor.numAdjacentMines() == 0) {
+                            // reveal it
+                            super.reveal();
+                            // pass it on
+                            neighbor.reveal();
+                        }
+                    }
+                }
+            }
+        }
+        
+
+        super.reveal();
+        
+        if (super.isValid(super.getRow()-1, super.getColumn())) {
+            Cell upCell = super.getGame().getCell(super.getRow()-1, super.getColumn());
+            if (!upCell.isMarked() && !upCell.containsMine() && !upCell.isRevealed())
+                upCell.reveal(); // reveal cell at column+1
+        }
+
+        if (super.isValid(super.getRow(), super.getColumn()-1)) {
+            Cell leftCell = super.getGame().getCell(super.getRow(), super.getColumn()-1);
+            if (!leftCell.containsMine() && !leftCell.isRevealed() && !leftCell.isMarked() && leftCell.numAdjacentMines() == 0)
+                leftCell.reveal(); // reveal cell at column-1
+        }
+
+        if (super.isValid(super.getRow(), super.getColumn()+1)) {
+            Cell rightCell = super.getGame().getCell(super.getRow(), super.getColumn()+1);
+            if (!rightCell.containsMine() && !rightCell.isMarked() && !rightCell.isRevealed() && rightCell.numAdjacentMines() == 0)
+                rightCell.reveal(); // reveal cell at column+1
+        }
+
+        if (super.isValid(super.getRow()+1, super.getColumn())) {
+            Cell downCell = super.getGame().getCell(super.getRow()+1, super.getColumn());
+            if (!downCell.containsMine() && !downCell.isMarked() && !downCell.isRevealed() && downCell.numAdjacentMines() == 0)
+                downCell.reveal(); // reveal cell at row+1
+        }
+        */
+    }
+    
+    /*
+     * Returns the number of mines adjacent to the cell.
+     */
+    public String toString() {
+        Integer numAdjMines = super.numAdjacentMines();
+        return numAdjMines.toString();
+    }
+    
+}

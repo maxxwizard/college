@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+  int i;
+  char test[5];
+  for (i = 0; i < 3; i++) {
+    sprintf(test, "%d", i);
+    printf("%s", test);
+  }
+}

@@ -1,0 +1,32 @@
+Matthew Huynh
+U85462311
+HW02
+
+Matthew starts the game on his Windows machine and is presented with a window with an IP address and a "Connect" button. He types in his friend Sharon's IP address and clicks connect. Matthew's friend receives the invitation (with his open client on his Mac laptop) and accepts it. The screen now shows a checkerboard with an adjacent IM window. He customizes his font and greets his friend via IM. The game has randomly chosen who goes first. The starting player clicks on a piece to select it, then clicks on a spot to move the piece. The two go back and forth until the game ends. Both players are now shown 2 buttons for "New Game?" or "Quit". Matthew says goodbye to his friend via the IM window and clicks the "Quit" button. Sharon is directed to the home screen again where she can either send a game request to someone else or wait for one.
+
+Functional requirements:
+- The user has the ability to choose who s/he can issue a game request to via IP address.
+- The user has the ability to accept or reject game invitations.
+- The user has the ability to chat with his/her friend via an IM window once connected.
+- At the end of a game, both players have the ability to request a new game with a user s/he is already connected to or to quit.
+- The user has the ability to customize their IM window font.
+- The system randomly decides who starts first.
+
+Non-functional requirements:
+- The system has the ability to run on any popular and modern operating systems (Windows, Mac, Linux).
+
+Game Logic Requirements:
+1. The game logic interface will provide the ability to report the current state of the game by passing back a data structure.
+2. The game logic interface will provide the ability to create a new instance of the game.
+3. The game logic interface will provide the ability to make a move that involves jumping multiple checkers.
+4. The game logic interface will provide the ability to manipulate a single piece, returning a boolean value of whether the move was successful or not.
+
+Test Cases:
+1. "get: gamestate" => "red: f6(kinged); black: e5; black: e5;"
+2. "init red: f6(kinged); black: e5;" => "ok;"
+"init red: f9; black: f8;" => "err;"
+3. "move: f6>d4>f2" => "ok;"
+"move f6>d4>d4" => "err;"
+4. "move f6>d4" => "ok;"
+"move f6>d1" => "err;"
+

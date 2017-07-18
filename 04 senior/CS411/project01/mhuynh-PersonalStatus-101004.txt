@@ -1,0 +1,3 @@
+- worked with team to create paper UI design
+- created the HTML shell
+- explained to teammates some HTML and PHP

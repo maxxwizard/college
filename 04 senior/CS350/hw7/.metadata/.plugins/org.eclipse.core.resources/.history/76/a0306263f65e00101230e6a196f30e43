@@ -1,0 +1,14 @@
+
+public class BadThread extends MyThread {
+
+	public BadThread(int i) {
+		super(i);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public void run()
+	{
+		super.doWork();
+	}
+
+}

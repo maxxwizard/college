@@ -1,0 +1,13 @@
+
+public class DekkerThread extends MyThread {
+
+	public DekkerThread(int i) {
+		super(i);
+	}
+	
+	public void run()
+	{
+		super.doWork();
+	}
+
+}

@@ -1,0 +1,40 @@
+Matthew Huynh
+U85462311
+HW03
+
+Exercise 1
+===========
+The user has the ability to choose who s/he can issue a game request to via IP address.
+1. Start the game client.
+2. Input an IP address of a computer running the game client.
+3. Click connect.
+4. Check that the recipient game client receives a game request.
+
+The user has the ability to accept or reject game invitations.
+1. Start the game client.
+2. Input an IP address of a computer running the game client.
+3. Click connect.
+4. On the recipient game client, check that a game request was received and there is an option to accept or reject it.
+
+The user has the ability to chat with his/her friend via an IM window once connected.
+1. Start the game client and establish a connection with a "friend."
+2. Check that there is an IM window and type a message in one side.
+3. Verify that the message was received on the other side.
+
+At the end of a game, the user has the ability to request a new game with a user s/he is already connected to or to quit.
+1. Start the game client.
+2. Start a game with a "friend."
+3. Play the game until an end condition is reached.
+4. Check that both players have the ability to request a new game with the current opponent or to quit the game client entirely.
+
+Exercise 2
+===========
+You could create a feature of the game that allows a developer/tester to "play" a script. This can speed up testing because there would be less repetition since a tester wouldn't need to type in the commands over and over. You could speed up verification by extending this feature and having it test some logic at the end of the script to verify that the game is behaving as expected.
+
+Exercise 3
+===========
+See file `ThreadedPeer_narrate.java`.
+
+Exercise 4
+===========
+Brooks argues that prose is an essential element for specifying requirements and other aspects of software because formal definitions, while elegant and concise, do not convey the "why" of certain software features. In addition, the prose helps clarify features by explaining them in more detail, perhaps with examples such as scenarios.

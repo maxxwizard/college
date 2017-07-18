@@ -1,0 +1,8 @@
+Matthew Huynh
+U85462311
+HW01
+
+Software projects frequently run out of time because:
+- Managers think that adding more manpower to a project will make it complete faster. The reason this doesn't work is because adding more manpower requires more synchronization time - the new workers have to be brought up to speed, and then there is more overhead to synchronize things.
+- Also, many tasks are sequential so there's only a certain degree to which the work can be split.
+- Managers don't add enough time to a project once it falls behind - a phenomenom Brooks calls the "regenerative schedule disaster."

@@ -1,0 +1,91 @@
+Matthew Huynh
+CS350 - HW9
+April 26, 2011
+
+Exercise 1
+==========
+usage: java Main <numOfProcesses=5> <numOfRequestsPerClient=5>
+
+Exercise 2
+==========
+It is not advisable to set the value of X to be too small because then the protocol would reduce to a FCFS one that alternates between sides. This reduces concurrency because the lane's capacity isn't being utilized.
+
+Exercise 3
+==========
+Semaphore coffeeNeeded = 0
+Semaphore coffeeReady = 0
+Semaphore potMutex = 1
+int M = # // number of mugs in a pot of coffee
+int pot = 0 // initially empty coffee pot
+
+CS Student's pseudocode:
+while (true)
+{
+  acquire (potMutex)
+  if (pot == 0)
+  {
+     release (coffeeNeeded)
+     acquire (cofeeReady)
+  }
+  pot--
+  release (potMutex)
+}
+
+PS Student's pseudocode:
+while (true)
+{
+  acquire (coffeeNeeded)
+  pot = M // brew coffee
+  release (coffeeReady)
+}
+
+Exercise 4
+==========
+Semaphore readerBarrier = 1, readcountMutex = 1, writecountMutex = 1, readers = 1, writers = 1
+int employees = 0
+
+Employee's pseudocode:
+wait (readerBarrier)
+wait (readers)
+wait (readcountMutex)
+if (readcount != 4)
+{  
+  readcount++
+  if (readcount == 1)
+    wait (writers)
+}
+signal (readcountMutex)
+signal (readers)
+signal (readerBarrier)
+
+... use bathroom ...
+
+wait (readcountMutex)
+readcount--
+if (readcount == 0)
+  signal (writers)
+signal (readcountMutex)
+
+Customer's pseudocode:
+wait (writecountMutex)
+writecount++
+if (writecount == 1)
+  wait (readers)
+signal (writecountMutex)
+
+wait (writers)
+  ... use bathroom ...
+signal (writers)
+
+wait (writecountMutex)
+writecount--
+if (writecount == 0)
+  signal (readers)
+signal (writecountMutex)
+
+
+Exercise 5
+==========
+X = 1
+Y = 1
+Z = 2

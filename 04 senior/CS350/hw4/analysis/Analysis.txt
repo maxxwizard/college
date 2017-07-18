@@ -1,0 +1,74 @@
+﻿Matthew Huynh
+CS350 - HW4
+
+Exercise 1
+==========
+a) Over a couple of runs, the simulation is centered around the expected statistics from analysis.
+expected				empirical:
+Tw: 0.0450s				Tw: 0.0443s
+w: 2.25 people			w: 3 people
+Tq: 0.0600s				Tq: 0.0591s
+q: 3 people				q: 3 people
+
+b) The simulation fluctuates moreso, and over a couple of runs, it performs better than expected more times than not.
+expected				empirical:
+Tw: 0.5850s				Tw: 0.4076s
+w: 38.025 people		w: 24 people
+Tq: 0.6000s				Tq: 0.4224s
+q: 39 people			q: 25 people
+
+c) The simulation's queue was constantly growing until it reached the end time. This is because the system is overloaded at 130% utilization.
+empirical:
+Tw: 31.3493s
+w: 2032 people
+Tq: 31.3690s
+q: 2033 people
+
+Exercise 2
+==========
+a) The simulation performed about as expected.
+expected				empirical:
+Tw: 0.0432s				Tw: 0.0554s
+w: 1.2948 people		w: 1 people
+Tq: 0.0732s				Tq: 0.09032 +- 0.00113s
+q: 2.1948 people		q: 2.92727 +- 0.06996 people
+Pr[rej]: 0.12602		Pr[rej]: 0.12602 +/- 0.0
+
+b) The system is overloaded at 150% utilization so we cannot calculate expected statistics.
+empirical:
+Tw: 0.0831s
+w: 3 people
+Tq: 0.08336 +/- 0.00148s
+q: 3.96491 +/- 0.08743
+Pr[rej]: 0.36541 +/- 0.0
+
+c) On average, we do about the same.
+empirical:
+Tw: 0.0481s
+w: 2 people
+Tq: 0.04640 +/- 0.00039s
+q: 2.88073 +/- 0.07930 people
+Pr[rej]: 0.12602 +/- 0.0
+
+d) On average, we do about the same.
+empirical:
+Tw: 0.0882s
+w: 3 people
+Tq: 0.08871 +/- 0.00023s
+q: 4.16495 +/- 0.12351s
+Pr[rej]: 0.36541 +/- 0.0
+
+Exercise 3
+==========
+a) See 3a.png.
+b) The system should achieve steady state after a couple of requests.
+c) 95th CI of w: 4.13208 +/- 0.52108 people
+98th CI of w: 4.13208 +/- 0.61944 people
+95th CI of Tq: 0.04832 +/- 0.00036 people
+98th CI of Tq: 0.04832 +/- 0.00043 people
+d) The simulation's Tq is similar to what we computed in the homework.
+
+Exercise 4
+==========
+a) See 4a.png.
+b) At lambda = 45, the system buckles because of network (as expected according to our homework calculations).

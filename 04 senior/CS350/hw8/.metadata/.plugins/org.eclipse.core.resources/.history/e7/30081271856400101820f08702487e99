@@ -1,0 +1,87 @@
+
+public class CameraThread extends Thread {
+	public int numRequestsServed;
+	
+	public CameraThread() {
+		numRequestsServed = 0;
+	}
+
+	/* 
+	 * sleep for a second (to wait for some requests to queue up)
+	 * wait on totalReqCounter
+	 * acquire mutexReqCounts
+	 * select next request according to FSCAN
+	 * delay proportional to time it takes camera to move
+	 * signal semaphores[request] reqCounts[request] times
+	 * clear reqCounts[request]
+	 * release mutexReqCounts
+	 */
+	public void run() {
+		while (true)
+		{
+			try {
+				Thread.sleep(500);
+				Main.activeQueue.totalReqCounter.acquire();
+				Main.activeQueue.mutexReqCounts.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			int request = selectNextRequest();
+			if (request == -1)
+			{
+				try {
+					throw new Exception("camera thread awoken with no requests in queue!");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			cameraDelay(request);
+			int numThreadsWaiting = Main.activeQueue.reqCounts[request];
+			numRequestsServed += numThreadsWaiting;
+			Main.activeQueue.reqCounts[request] = 0;
+			Main.activeQueue.semaphores[request].release(numThreadsWaiting);
+			Main.activeQueue.mutexReqCounts.release();
+		}
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+	
+	void printCurrentQueue()
+	{
+		System.out.print("[");
+		for (int i = 0; i < Main.activeQueue.reqCounts.length; i++)
+		{
+			System.out.print(Main.activeQueue.reqCounts[i] + "-");
+		}
+		System.out.println("]");
+	}
+	
+	/*
+	 * Selects the next request according to FSCAN.
+	 */
+	int selectNextRequest()
+	{
+		printCurrentQueue();
+		for (int i = 0; i < Main.activeQueue.reqCounts.length; i++)
+		{
+			if (Main.activeQueue.reqCounts[i] > 0)
+			{
+				printLine("selected angle " + i);
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/*
+	 * Delays the thread proportional to how much the
+	 * camera has to move.
+	 */
+	void cameraDelay(int request)
+	{
+		
+	}
+}

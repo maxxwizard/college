@@ -1,0 +1,64 @@
+1)
+begin: 	add $t0, $zero, $zero 	# initialize $t0
+loop: 	beq $a1, $zero, finish	# if b == 0, then go to Label finish
+	add $t0, $t0, $a0	# if a != b, add a to $t0
+	addi $a1, $a1, -1	# and subtract 1 from b
+	j loop			# and restart loop
+finish: addi $t0, $t0, 50	# add 50 to $t0
+	add $v0, $t0, $zero	# set output to $t0
+
+Keep adding a to $t0 and decrementing b by 1 until b equals 0, at which point add 50 to $t0 (i.e. a*b + 50).
+
+2)
+lui $s0, 0x003D		# load base memory address for array x into $s0
+ori $s0, 0x0920
+lw $s1, 44($s0)		# load x[11] into $s1
+add $t1, $s1, $t0	# $t1 = x[11] + c
+sw $t1, 32($s0)		# x[8] = x[11] + c
+
+3)
+
+a) move $t1, $t2
+	add $t1, $t2, $zero	# $t1 = $t2
+
+b) clear $t0
+	add $t0, $zero, $zero
+
+c) li $t1, small
+	addi $t1, $zero, small
+
+d) li $t2, big
+	lui $t2, upper_half(big)
+	ori $t2, lower_half(big)
+
+e) lw $t5, big($t2)
+	addi $at, $t2, upper_half(big)	# calculate memory address
+	ori $at, lower_half(big)	
+	lw $t5, $at			# load word at $at into $t5
+
+f) addi $t0, $t2, big
+	addi $t2, $t2, upper_half(big)
+	addi $t0, $t2, lower_half(big)
+
+g) beq $t1, small, L
+	addi $at, $zero, small
+	beq $t1, $at, L
+
+h) beq $t2, big, L
+	lui $at, upper_half_big)
+	ori $at, lower_half(big)
+	beq $t2, $at, L
+
+i) ble $t3, $t5, L
+	slt $at, $t3, $t5
+	bne $at, $zero, L
+
+j) bgt $t4, $t5, L
+	slt $at, $t4, $t5
+	beq $at, $zero, L
+
+k) bge $t5, $t3, L
+	slt $t0, $t5, $t3	# $t0 is set to 0 if $t5 > $t3
+	sub $t1, $t5, $t3	# if $t1 is 0, numbers are equal
+	xor $at, $t0, $t1
+	bne $at, $zero, L

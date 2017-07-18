@@ -1,0 +1,90 @@
+
+public class CameraThread extends Thread {
+	public int numRequestsServed;
+	public int currentAngle = 0;
+	
+	public CameraThread() {
+		numRequestsServed = 0;
+	}
+
+	public void run() {
+		while (true)
+		{
+			// sleep for 500ms (to wait for some requests to queue up)
+			// wait on totalReqCounter
+			try {
+				Thread.sleep(500);
+				Main.totalReqCounter.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			// signal totalReqCounter to return it to its correct value
+			Main.totalReqCounter.release();
+			// process queue
+			processQueue();
+			// acquire mutex to buffer queue
+			// swap buffer and process queues
+		}
+	}
+	
+	/* 
+	 * for each reqCounts[i]
+	 * {
+	 *   process request
+	 *   signal semaphores[request] reqCounts[i] times (to wake up those clients)
+	 *   acquire totalReqCounter reqCounts[i] times
+	 *   clear reqCounts[request]
+	 * }
+	 */
+	void processQueue()
+	{
+		
+	}
+	
+	void serviceRequest(int request)
+	{
+		cameraDelay(request-currentAngle);
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+	
+	void printBothQueues()
+	{
+		System.out.print(" buffer: ");
+		Main.bufferQueue.printQueue();
+		System.out.print("process: ");
+		Main.processQueue.printQueue();
+	}
+	
+	/*
+	 * Selects the next request according to FSCAN.
+	 */
+	int selectNextRequest()
+	{
+		printBothQueues();
+		for (int i = 0; i < Main.processQueue.reqCounts.length; i++)
+		{
+			if (Main.processQueue.reqCounts[i] > 0)
+			{
+				printLine("selected angle " + i);
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/*
+	 * Delays the thread proportional to how much the camera has to move.
+	 */
+	void cameraDelay(int angleDifference)
+	{
+		try {
+			Thread.sleep(angleDifference * 100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+}

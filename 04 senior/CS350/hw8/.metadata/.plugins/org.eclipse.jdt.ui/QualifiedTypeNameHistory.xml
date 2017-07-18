@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.concurrent.atomic.AtomicIntegerArray"/>
+<fullyQualifiedTypeName name="java.util.concurrent.atomic.AtomicReferenceArray"/>
+<fullyQualifiedTypeName name="Scheduler"/>
+<fullyQualifiedTypeName name="java.util.concurrent.Semaphore"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="Main"/>
+<fullyQualifiedTypeName name="CameraThread"/>
+<fullyQualifiedTypeName name="FscanQueue"/>
+</qualifiedTypeNameHistroy>

@@ -1,0 +1,25 @@
+1)
+i. a % d = 5.0, d % a = 4.0
+The first expression asks for the remainder of 5 divided by 9. Since 5 doesn't go into 9, the remainder is 5. The second expression asks for the remainder of 9 divided by 5. 5 goes into 9 once and the remainder is 4. The answers are given as doubles because variable d is a double.
+ii. a / b = 1, a / c = 1.6666666666666667
+Since a and b are both integers, integer division is done. 3 only goes into 5 once so the quotient of 1 is returned. Since c is a double, a / c is evaluated using regular division and you get a floating point answer.
+iii. d / a * a = 9.0, (int)d / a * a = 5
+The first expression is evaluated normally and a floating point answer is returned because variable d is a double. In the second expression, d is cast as an integer so integer division is used when evaluating d / a. 5 goes into 9 once so d / a is evaluated to 1. 1 times 5 is 5.
+
+2)
+i. double g = 3;
+g is initialized as 3.0. In order for the double g to retain the value of 3, the integer value is converted to a double value.
+ii. int f = 5.0;
+This does not compile because the variable f can only hold integer values and not double values. If you wanted f to hold the value of 5, you could cast 5.0 as an integer.
+iii. double h = 7 / 2 * 10;
+h is initialized as 30.0 because 7 / 2 evaluates to 3 (by method of integer division) and 3 times 10 is 30. The integer value 30 is then converted to the double value of 30.0 so h can retain that value.
+
+3)
+for (int i = 0; i < 6; i++)
+{
+  for (int j = 0; j < i; j++)
+    System.out.print(" ");
+  for (int k = 0; k < 6 - i; k++)
+    System.out.print("*");
+  System.out.println();
+}

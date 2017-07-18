@@ -1,0 +1,130 @@
+
+public class Scheduler extends Thread {
+	public int numRequestsServed;
+	public int carsReleased;
+	public int carsInLane;
+	public Direction direction;
+	
+	public Scheduler() {
+		direction = Direction.NORTH;
+		numRequestsServed = 0;
+		carsReleased = 0;
+		carsInLane = 0;
+	}
+
+	/*
+	 * wait on totalCarCounter
+	 * wait for CS to clear (acquire lane)
+	 * acquireQueue()
+	 * if (carsReleased == X_MAX_CARS_WAIT || queue is empty)
+	 * {
+	 *    releaseQueue()
+	 *    switchDirection()
+	 *    acquireQueue()
+	 * }
+	 * while (carsInLane <= C_MAX_CARS_IN_LANE && carsReleased <= X_MAX_CARS_WAIT && !queueIsEmpty())
+	 * {
+	 *    numRequestsServed++
+	 *    carsInLane++
+	 *    carsReleased++
+	 *    remove front of queue
+	 *    releaseBarrier()
+	 * }
+	 * releaseQueue()
+	 */
+	public void run() {
+		while (true)
+		{
+			// wait on totalReqCounter
+			try {
+				System.out.println("waiting for requests");
+				Main.pendingRequests.acquire();
+				System.out.println("waiting for lane");
+				Main.lane.acquire(Main.C_MAX_CARS_IN_LANE);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println("waiting for queue");
+			acquireQueue();
+			if (carsReleased == Main.X_MAX_CARS_WAIT || queueIsEmpty())
+			{
+				releaseQueue();
+				switchDirection();
+				acquireQueue();
+			}
+			while (carsInLane <= Main.C_MAX_CARS_IN_LANE && carsReleased <= Main.X_MAX_CARS_WAIT && !queueIsEmpty())
+			{
+				System.out.println(direction + "car released");
+				numRequestsServed++;
+				carsInLane++;
+				carsReleased++;
+				removeFrontOfQueue();
+				releaseBarrier();
+			}
+			releaseQueue();
+		}
+	}
+
+	private void releaseBarrier() {
+		if (direction == Direction.NORTH)
+		{
+			Main.northBarrier.release();
+		} else {
+			Main.southBarrier.release();
+		}
+	}
+
+	private void removeFrontOfQueue() {
+		if (direction == Direction.NORTH)
+		{
+			Main.northbound.removeFirst();
+		} else {
+			Main.southbound.removeFirst();
+		}
+	}
+
+	private void acquireQueue()
+	{
+		try {
+			if (direction == Direction.NORTH)
+			{
+				
+					Main.northboundMutex.acquire();
+				
+			} else {
+				Main.southboundMutex.acquire();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void releaseQueue()
+	{
+		if (direction == Direction.NORTH)
+		{
+			Main.northboundMutex.release();
+		} else {
+			Main.southboundMutex.release();
+		}
+	}
+	
+	private void switchDirection()
+	{
+		System.out.println("\nswitch");
+		direction = (direction == Direction.NORTH) ? Direction.SOUTH : Direction.NORTH;
+		carsInLane = 0;
+		carsReleased = 0;
+	}
+	
+	private boolean queueIsEmpty()
+	{
+		if (direction == Direction.NORTH)
+		{
+			return Main.northbound.isEmpty();
+		} else {
+			return Main.southbound.isEmpty();
+		}
+	}
+	
+}

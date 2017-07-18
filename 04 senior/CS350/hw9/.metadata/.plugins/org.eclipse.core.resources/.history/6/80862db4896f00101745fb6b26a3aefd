@@ -1,0 +1,68 @@
+import java.util.LinkedList;
+import java.util.concurrent.*;
+
+public class Main {
+	
+	final static int N_CARS = 20;
+	final static int K_TIMES_TRAVERSE_LANE = 5;
+	final static int C_MAX_CARS_IN_LANE = 3;
+	final static int X_MAX_CARS_WAIT = 6;
+	
+	/* queues and their mutexes */
+	public static LinkedList<Integer> northbound = new LinkedList<Integer>();
+	public static LinkedList<Integer> southbound = new LinkedList<Integer>();
+	public static Semaphore northboundMutex = new Semaphore(1, false);
+	public static Semaphore southboundMutex = new Semaphore(1, false);
+	
+	/* north and south barriers */
+	public static Semaphore northBarrier = new Semaphore(0, true);
+	public static Semaphore southBarrier = new Semaphore(0, true);
+	
+	/* scheduler's signaler */
+	public static Semaphore pendingRequests = new Semaphore(0, false);
+
+	public static void main(String[] args) {
+		
+		// start camera thread
+		Scheduler cameraThread = new Scheduler();
+		cameraThread.start();
+		
+		// start client threads
+		CarThread[] clientThreads = new CarThread[N_CARS];
+		for (int i = 0; i < N_CARS; i++)
+		{
+			clientThreads[i] = new CarThread(i, K_TIMES_TRAVERSE_LANE, Direction.NORTH);
+			clientThreads[i].start();
+		}
+		
+		// wait for client threads to finish
+		for (int i = 0; i < N; i++)
+		{
+			try {
+				clientThreads[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// display how many requests were served (should equal to numClients*numRequests)
+		System.out.println("\nexpected requests: " + N*K);
+		System.out.println("serviced requests: " + cameraThread.numRequestsServed);
+		
+		// stop camera thread
+		cameraThread.stop();
+
+	}
+	
+	static void queueUp(Direction d)
+	{
+		if (d == Direction.NORTH)
+		{
+			
+		} else if (d == Direction.SOUTH)
+		{
+			
+		}
+	}
+
+}

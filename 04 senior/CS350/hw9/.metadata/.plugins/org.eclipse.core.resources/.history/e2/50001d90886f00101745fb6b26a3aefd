@@ -1,0 +1,53 @@
+import java.util.Random;
+
+public class CarThread extends Thread {
+	Random r;
+	public int id;
+	int numOfRequests;
+	Direction direction; // heading towards this direction
+
+	public CarThread(int i, int numRequests, Direction d) {
+		id = i;
+		numOfRequests = numRequests;
+		direction = d;
+		
+		r = new Random();
+	}
+
+	/* while (numOfRequests > 0)
+	 * {
+	 *   sleep for a random period of time
+  	 *   acquire lock on appropriate N or S queue
+  	 *   add to end of queue
+  	 *   release lock on queue
+  	 *   signal scheduler
+  	 *   wait on appropriate N or S barrier
+  	 *   numOfRequests--;
+  	 * }
+	 */
+	public void run() {
+		while (numOfRequests > 0)
+		{
+			randomSleep();
+			
+			numOfRequests--;
+		}
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Thread " + this.id + " " + s);
+	}
+	
+	/*
+	 * Randomly sleeps [0,20) ms.
+	 */
+	void randomSleep()
+	{
+		try {
+			Thread.sleep(r.nextInt(20));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+}

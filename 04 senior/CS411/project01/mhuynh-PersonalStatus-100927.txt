@@ -1,0 +1,3 @@
+- created a sourceforge project
+- helped everyone set up Subversion
+- shared a PHP/MySQL project that I did for CS460 as a case study

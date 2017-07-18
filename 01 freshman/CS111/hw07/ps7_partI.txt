@@ -1,0 +1,65 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+a.
+I looked at the daysBefore method and saw that the retrieval of a month's day count from the array DAYS_IN_MONTH was wrong. The current retrieval assumed the month's position in the year is the same as the month's index number in the array. However, this is not the case; the first month is actually at index 0 of the array, the second month at index 1, and so on. To properly retrieve a month's day count from the array, we need to ask for DAYS_IN_MONTH[m-1].
+
+I changed the line inside the for loop accordingly:
+
+    numDays = numDays + DAYS_IN_MONTH[m-1];
+
+b.
+The program was summing too many months. For example, 2-14 was actually calculated as 3-14 because the first two months were summed and then the 14 was added onto that. 3-17 was calculated as 4-17.
+
+I fixed these two lines in the daysBetween method:
+    int dayInYear = daysBefore(month1-1) + day1;
+    int otherDayInYear = daysBefore(month2-1) + day2;
+
+2)
+
+a.
+5 5 3 - foo is an integer array. bar references foo while baz is a copy of the old foo.
+
+b.
+4 6 8 10 12 12 - The second integer will replace the first integer. The third integer will replace the second. The array shifts to the "left" except for the last integer, which will always stay the same.
+
+c.
+12
+4
+2 2 2 
+The length of the 2D array is length of all the arrays combined, which is 12 (3 arrays of 4). twoD[0] refers to the first array in the twoD array, which is of length 4. The for loop subtracts row position while increasing column position so it is as if we are iterating diagonally through the twoD array.
+
+3)
+
+a.
+public static int minValue(int[] data) {
+    int min = data[0];
+    for (int i = 1; i < data.length; i++) {
+        if (data[i] < min) {
+            min = data[i];
+        }
+    }
+    return min;
+}
+
+b.
+public static boolean contains(int[] data, int value) {
+    for (int i = 0; i < data.length; i++) {
+       if (data[i] == value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+c.
+public static void swapFirstLast(int[] data) {
+    int temp = data[0];
+    data[0] = data[data.length-1];
+    data[data.length-1] = temp;
+}
+
+d.
+The actual array isn't passed to the method but rather a reference so work is performed directly on the array. Thus, there is no need to return an array or any sort of value.

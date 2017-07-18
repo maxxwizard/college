@@ -1,0 +1,15 @@
+import java.util.*;
+
+public abstract class Scheduler extends Thread {
+
+	public Scheduler(int i) {
+	}
+
+	public void run() {
+		// select process Pi with smallest index i
+		// for which V[i] is "true" and wake it by
+		// signaling B[i]
+		
+		// block on semaphore S
+	}
+}

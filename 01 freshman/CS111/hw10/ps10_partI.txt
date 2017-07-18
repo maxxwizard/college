@@ -1,0 +1,45 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+/*
+ * Limousine.java
+ *
+ * A class that represents a limousine. It is a subclass of Automobile.
+ *
+ * It inherits fields and methods from Vehicle and Automobile.
+ *
+ * Computer Science 111, Boston University
+ */
+
+public class Limousine extends Automobile {
+   private boolean fridge;
+   private boolean sunRoof;
+
+   public Limousine(String make, String model, int year, int numSeats, boolean fridge, boolean sunRoof) {
+       super(make, model, year, numSeats, false);
+       this.fridge = fridge;
+       this.sunRoof = sunRoof;
+   }
+
+   public hasFridge() {
+       return fridge;
+   }
+
+   public hasSunRoof() {
+       return sunRoof;
+   }
+}
+
+2)
+
+a. This is valid because a variable's declared type can be a superclass of the actual type.
+b. This is not valid because a variable's actual type can never be a superclass of the declared type.
+c. This is valid because a variable's declared type can be a superclass of the actual type (Object is the ultimate superclass for all defined classes).
+
+3)
+
+a. wee zow eek
+b. z1 is declared as a Zoo object since there is no 'extra' method in the Zoo class, the compiler complains.
+c. z2 is declared as a Zoo object since there is no 'extra' method in the Zoo class, the compiler complains.

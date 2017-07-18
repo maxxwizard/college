@@ -1,0 +1,55 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+a) i. 5
+  ii. 7
+ iii. 0
+  iv. 1
+   v. infinite
+
+b) public static int sumOdds(int n) {
+	int odd = 1;
+        int sum = 0;
+	int count = 1;
+
+	while (count <= n) {
+	    sum = sum + odd;
+	    odd = odd + 2;
+	    count++;
+	}
+            
+	return sum;
+   }
+
+2)
+
+a) Scanner console = new Scanner(System.in);
+   int num;
+   do {
+       System.out.print("Enter a number: ");
+       num = console.nextInt();
+   } while (num <= 0 || num%2 != 0);
+
+b) while (num < 10 || num > 20);
+
+c) Scanner console = new Scanner(System.in);
+   int num;
+   boolean validInput = false;
+   while (!validInput) {
+       System.out.print("Enter a number: ");
+       num = console.nextInt();
+       validInput = num >= 0;
+   }
+
+3) 
+
+a) i. 10 to 34 inclusive
+  ii. 0, 5, 10, 15, 20, 25, 35, 40, 45
+
+b) i. rand.nextInt(15) + 1;
+  ii. int c = rand.nextInt(51);
+      while (c%2 != 0 || c < 30 || c > 50) {
+          c = rand.nextInt(51);
+      }

@@ -1,0 +1,4 @@
+- created paper UI design
+- created HTML shell
+- created requirements and test cases
+- next up is database design, database creation, and then PHP coding

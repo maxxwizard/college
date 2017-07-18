@@ -1,0 +1,94 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.JFrame;
+
+public class graphicsApp extends JFrame
+{
+ XCanvas theCanvas;
+ int width = 800, height = 600;
+
+ public static void main(String[] args)
+ {
+  new graphicsApp();
+ }
+
+ graphicsApp()
+ {
+  super("Java Graphics 101");
+
+  addWindowListener( new WindowAdapter()
+  {
+   public void windowClosing(WindowEvent e)
+   {
+    System.exit(0);
+   }
+  } );
+
+  setSize(width, height);
+  theCanvas = new XCanvas();
+  add(theCanvas, "Center");
+
+  setVisible(true);
+ }
+
+ class XCanvas extends Canvas
+ {
+  XCanvas()
+  {
+  }
+
+  public void update(Graphics g)
+  {
+   paint(g);
+  }
+
+  public void paint(Graphics g)
+  {
+   clearTheCanvas(g);
+
+   drawSomeText(g);
+   drawSomeGraphics(g);
+  }
+
+  public void clearTheCanvas(Graphics g)
+  {
+   g.setColor(Color.white);
+
+   g.fillRect(0, 0, width, height);
+  }
+
+  public void drawSomeText (Graphics g)
+  {
+   Font f = new Font("TimesRoman",Font.BOLD,18);
+   g.setFont(f);
+
+   g.setColor(Color.blue);
+
+   g.drawString("Black side", 50, 50 );
+   g.drawString("Red side", 50, 500 );
+  }
+
+  public void drawSomeGraphics( Graphics g )
+  {
+   g.setColor( Color.red );
+
+   g.fillOval(50, 70, 50, 50);
+
+   g.setColor( Color.black );
+
+   g.fillOval(150, 70, 50, 50);
+
+   g.drawLine ( 50, 150, 110, 150 );
+   g.drawLine ( 110, 150, 110, 210 );
+   g.drawLine ( 110, 210, 50, 210 );
+   g.drawLine ( 50, 210, 50, 150 );
+
+   g.drawLine ( 110, 150, 170, 150 );
+   g.drawLine ( 170, 150, 170, 210 );
+   g.drawLine ( 170, 210, 110, 210 );
+   g.drawLine ( 110, 210, 110, 150 );
+
+   g.fillRect(110, 150, 60, 60);
+  }
+ }
+}

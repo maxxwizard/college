@@ -1,0 +1,71 @@
+-- Matthew Huynh
+-- CS320 - Kfoury
+-- Assignment #4
+
+Introduce agg, id.
+Assume \forall f. f `agg` id = f
+Assume \forall f. id `agg` f = f
+Assume \forall f,g,h. f `agg` (g `agg` h) = (f `agg` g) `agg` h
+
+--1.a
+Introduce foldr.
+Assume \forall f,b,x,xs. foldr f b (x:xs) = f x (foldr f b xs)
+Assume \forall f,b. foldr f b [] = b
+--1.b
+Assume \forall x,xs,ys. (x:xs) ++ ys = x:(xs ++ ys)
+Assume \forall ys. [] ++ ys = ys
+--1.c
+Assert \forall ys.
+  [] ++ ys = ys
+  /\ foldr agg id ys = foldr agg id ([] ++ ys)
+  /\ foldr agg id [] = id
+  /\ id `agg` (foldr agg id ys) = foldr agg id ys
+  /\ (foldr agg id []) `agg` (foldr agg id ys) = id `agg` (foldr agg id ys)
+  /\ (foldr agg id []) `agg` (foldr agg id ys) = foldr agg id ([] ++ ys)
+	   
+--1.d
+Assert \forall x,xs,ys.
+     (foldr agg id xs) `agg` (foldr agg id ys) = foldr agg id (xs ++ ys)
+  => (x:xs) ++ ys = x:(xs ++ ys)
+  /\ foldr agg id (x:xs) = agg x (foldr agg id xs) = x `agg` (foldr agg id xs)
+  /\ foldr agg id (x:xs) `agg` (foldr agg id ys) = (x `agg` (foldr agg id xs)) `agg` (foldr agg id ys)
+  /\ x `agg` ((foldr agg id xs) `agg` (foldr agg id ys)) = (x `agg` (foldr agg id xs)) `agg` (foldr agg id ys)
+  /\ x `agg` ((foldr agg id xs) `agg` (foldr agg id ys)) = x `agg` (foldr agg id (xs ++ ys))
+  /\ x `agg` (foldr agg id (xs ++ ys)) = agg x (foldr agg id (xs ++ ys))
+  /\ foldr agg id (x:(xs ++ ys)) = agg x (foldr agg id (xs ++ ys)) = x `agg` (foldr agg id (xs ++ ys))
+  /\ x `agg` (foldr agg id (xs ++ ys)) = foldr agg id (x:(xs ++ ys))
+  /\ (foldr agg id (x:xs)) `agg` (foldr agg id ys) = foldr agg id ((x:xs) ++ ys)
+  
+--2.a
+Assert \forall xs.
+     xs = []
+  => [] ++ xs = xs
+  /\ [] ++ [] = []
+  /\ xs ++ [] = xs
+  
+Assert \forall x,xs.
+     xs ++ [] = xs
+  => (x:xs) ++ [] = x:(xs ++ [])
+  /\ x:(xs ++ []) = x:xs
+  /\ (x:xs) ++ [] = x:xs
+
+--2.b
+Assert \forall xs,ys,zs.
+  xs = []
+  => (xs ++ ys) ++ zs = ([] ++ ys) ++ zs
+  /\ [] ++ ys = ys
+  /\ (ys) ++ zs = ys ++ zs
+  /\ (xs ++ ys) = ys
+  /\ (xs ++ ys) ++ zs = ([] ++ ys) ++ zs = ys ++ zs
+  /\ xs ++ (ys ++ zs) = [] ++ (ys ++ zs) = ys ++ zs
+  /\ (xs ++ ys) ++ zs = xs ++ (ys ++ zs)
+
+Assert \forall x,xs,ys,zs.
+  (xs ++ ys) ++ zs = xs ++ (ys ++ zs)
+  => (x:xs) ++ ys = x:(xs ++ ys)
+  /\ x:(xs ++ ys) = (x:xs) ++ ys
+  /\ ((x:xs) ++ ys) ++ zs = (x:(xs ++ ys)) ++ zs
+  /\ (x:(xs ++ ys)) ++ zs = (x:((xs ++ ys) ++ zs))
+  /\ (x:((xs ++ ys) ++ zs)) = (x:(xs ++ (ys ++ zs)))
+  /\ (x:xs) ++ (ys ++ zs) = (x:(xs ++ (ys ++ zs)))
+  /\ ((x:xs) ++ ys) ++ zs = (x:xs) ++ (ys ++ zs)

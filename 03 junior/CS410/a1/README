@@ -1,0 +1,15 @@
+Matthew Huynh
+CS410 - West
+Assignment 1
+
+============
+Compilation
+============
+Run 'make' at the terminal.
+
+============
+"Bugs"
+============
+- If the -l flag is specified, the finds program only works with absolute pathnames  (so the argument to -p must start with '/').
+- I did not finish the regular expression method so wildcard matching does not work. However, I do check that the argument to -s is regex valid.
+- Program is inefficient (giant sized strings instead of malloc'ing).

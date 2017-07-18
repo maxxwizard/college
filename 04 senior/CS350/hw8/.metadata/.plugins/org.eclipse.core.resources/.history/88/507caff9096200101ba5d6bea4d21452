@@ -1,0 +1,57 @@
+public abstract class MyThread extends Thread {
+	public int id;
+
+	public MyThread(int i) {
+		id = i;
+	}
+
+	public void run() {
+		//for (int i = 1; i <= 5; i++) {
+			EnterCS();
+			doWork();
+			ExitCS();
+		//}
+	}
+	
+	/*
+	 * Signal intent to enter CS.
+	 */
+	void EnterCS()
+	{
+		printLine("is requesting CS");
+		
+		try {
+			Main.mutexV.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Main.V[id] = 1;
+		Main.mutexV.release();
+		Main.S.release(); // signal scheduler
+		try {
+			Main.B[id].acquire(); // wait until scheduled
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Signal intent to exit CS.
+	 */
+	void ExitCS()
+	{
+		printLine("is exiting the CS");
+		
+		Main.B[id].release();
+	}
+	
+	void doWork()
+	{
+		printLine("is in the CS");
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Thread " + this.id + " " + s);
+	}
+}

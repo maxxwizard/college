@@ -1,0 +1,90 @@
+import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
+
+public class Main {
+	
+	final static int N_CARS = 20;
+	final static int K_TIMES_TRAVERSE_LANE = 10; // 10 traversals = 5 round trips
+	final static int C_MAX_CARS_IN_LANE = 3;
+	final static int X_MAX_CARS_WAIT = 6;
+	
+	/* queues and their mutexes */
+	public static LinkedList<Integer> northbound = new LinkedList<Integer>();
+	public static LinkedList<Integer> southbound = new LinkedList<Integer>();
+	public static Semaphore northboundMutex = new Semaphore(1, false);
+	public static Semaphore southboundMutex = new Semaphore(1, false);
+	
+	/* north and south barriers */
+	public static Semaphore northBarrier = new Semaphore(0, true);
+	public static Semaphore southBarrier = new Semaphore(0, true);
+	
+	/* scheduler's signaler */
+	public static Semaphore pendingRequests = new Semaphore(0, false);
+	
+	/* lane mutex */
+	public static Semaphore lane;
+
+	public static void main(String[] args) {
+		// initialize synch variables
+		lane = new Semaphore(C_MAX_CARS_IN_LANE, false);
+		
+		// start scheduler
+		Scheduler cameraThread = new Scheduler();
+		cameraThread.start();
+		
+		// start car threads
+		CarThread[] carThreads = new CarThread[N_CARS];
+		for (int i = 0; i < N_CARS; i++)
+		{
+			carThreads[i] = new CarThread(i, K_TIMES_TRAVERSE_LANE, Direction.NORTH);
+			carThreads[i].start();
+		}
+		
+		// wait for car threads to finish
+		for (int i = 0; i < N_CARS; i++)
+		{
+			try {
+				carThreads[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// display how many requests were served versus expected
+		//System.out.println("\nexpected requests: " + N_CARS*K_TIMES_TRAVERSE_LANE);
+		//System.out.println("serviced requests: " + cameraThread.numRequestsServed);
+		
+		// stop scheduler thread
+		cameraThread.stop();
+
+	}
+	
+	/*
+	 * acquire mutex on appropriate queue
+	 * add id to queue
+	 * print "s" or "n"
+	 * release mutex
+	 */
+	static void queueUp(int id, Direction d)
+	{
+		try {
+			if (d == Direction.NORTH)
+			{
+				northboundMutex.acquire();
+				northbound.add(new Integer(id));
+				northboundMutex.release();
+				System.out.print("n");
+			} 
+			else if (d == Direction.SOUTH)
+			{
+				southboundMutex.acquire();
+				southbound.add(new Integer(id));
+				southboundMutex.release();
+				System.out.print("s");
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

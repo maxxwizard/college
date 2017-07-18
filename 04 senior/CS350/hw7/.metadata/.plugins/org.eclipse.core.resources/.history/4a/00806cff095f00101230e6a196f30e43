@@ -1,0 +1,51 @@
+import java.util.*;
+
+public abstract class MyThread extends Thread {
+	public int id;
+	Random rand;
+	FileWrite fw;
+
+	public MyThread(int i, String fileName) {
+		id = i;
+		rand = new Random();
+		fw = new FileWrite(fileName);
+	}
+
+	public void run() {
+		for (int i = 1; i <= 5; i++) {
+			EnterCS();
+			fw.write("Thread " + this.id + " is starting iteration " + i);
+			doWork();
+			fw.write("Thread " + this.id + " is done with iteration " + i);
+			ExitCS();
+		}
+	}
+	
+	abstract void EnterCS();
+	abstract void ExitCS();
+	
+	void doWork()
+	{
+		this.randomSleep();
+		fw.write("We hold these truths to be self-evident, that all men are created equal,");
+		System.out.println();
+		this.randomSleep();
+		fw.write("that they are endowed by their Creator with certain unalienable Rights,");
+		this.randomSleep();
+		fw.write("that among these are Life, Liberty and the pursuit of Happiness.");
+		this.randomSleep();
+	}
+	
+	private void randomSleep()
+	{
+		try {
+			Thread.sleep(rand.nextInt(20)+1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void printLn(String s) {
+		System.out.println("Thread " + this.id + ": " + s);
+	}
+}

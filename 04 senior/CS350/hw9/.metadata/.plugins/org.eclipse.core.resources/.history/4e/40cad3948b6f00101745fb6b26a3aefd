@@ -1,0 +1,45 @@
+
+public class Scheduler extends Thread {
+	public int numRequestsServed;
+	public int carsReleased;
+	public int carsInLane;
+	public Direction direction;
+	
+	public Scheduler() {
+		direction = Direction.NORTH;
+		numRequestsServed = 0;
+		carsReleased = 0;
+		carsInLane = 0;
+	}
+
+	/*
+	 * wait on totalCarCounter
+	 * if (carsReleased = X_MAX_CARS_WAIT)
+	 *    reset()
+	 * acquireQueue()
+	 * if (queue is not empty && carsInLane <= C_MAX_CARS_IN_LANE)
+	 * {
+	 *    numRequestsServed++
+	 *    carsInLane++
+	 *    remove front of queue
+	 *    releaseBarrier()
+	 * }
+	 * releaseQueue()
+	 */
+	public void run() {
+		while (true)
+		{
+			// wait on totalReqCounter
+			try {
+				Main.pendingRequests.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+}

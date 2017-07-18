@@ -1,0 +1,17 @@
+
+public class ClientThread extends Thread {
+	
+	public int id;
+
+	public ClientThread(int i) {
+		id = i;
+	}
+
+	public void run() {
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Thread " + this.id + " " + s);
+	}
+}

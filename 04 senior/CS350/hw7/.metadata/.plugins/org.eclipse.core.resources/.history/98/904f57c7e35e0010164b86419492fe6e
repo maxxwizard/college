@@ -1,0 +1,13 @@
+public class MyProcess extends Thread
+{
+	private int id;
+	public MyProcess(int i)
+	      {
+	        id = i;
+	}
+ 
+	public void run()
+	{
+	/* CODE OF PROCESS GOES HERE */
+	}
+}

@@ -1,0 +1,108 @@
+/**
+ * DrawTorchPrintChars.java
+ *
+ * Computer Science 111, Boston University
+ *
+ * This version of our DrawTorch program replaces the loops that
+ * print the characters on a given line with calls to a method 
+ * with parameters.
+ */
+
+public class DrawTorchPrintChars {
+    // a class constant that stores the height of the 
+    // top portion of the torch
+    public static final int TOP_HEIGHT = 2;
+    
+    public static void main(String[] args) {
+        drawFlame();
+        drawRim();
+        drawTop();
+        drawHandle();
+        drawBottom();
+    }
+    
+    /*
+     * Prints NUM copies of the character CH on the current
+     * output line.
+     */
+    public static void printChars(char ch, int num) {
+        for (int i = 0; i < num; i++) {
+            System.out.print(ch);
+        }
+    }
+    
+    /*
+     * draws the flame portion of the figure
+     */
+    public static void drawFlame() {
+        for (int line = 1; line <= 2*TOP_HEIGHT; line++) {
+            // spaces to the left of the flame
+            printChars(' ', 2*TOP_HEIGHT - line);
+
+            // the flame itself -- first the left, then the right
+            printChars('(', line);
+            printChars(')', line);
+            
+            System.out.println();
+        }
+    }
+    
+    /*
+     * draws the rim -- i.e., the line of = symbols at the top of the base
+     * of the flame
+     */
+    public static void drawRim() { 
+        printChars('=', 4*TOP_HEIGHT);
+        System.out.println();
+    }
+    
+    /*
+     * draws the top portion of the torch -- i.e., between the rim
+     * and the handle
+     */
+    public static void drawTop() {
+        for (int line = 1; line <= TOP_HEIGHT; line++) {
+            // spaces to the left of the torch
+            printChars(' ', line - 1);
+            
+            // the torch itself
+            System.out.print("|");
+            printChars(':', 4*TOP_HEIGHT - 2*line);
+            System.out.print("|");
+            
+            System.out.println();
+        }
+    }
+    
+    /*
+     * draws the handle of the torch
+     */
+    public static void drawHandle() {
+        for (int line = 1; line <= 2*TOP_HEIGHT; line++) {
+            // spaces to the left of the handle
+            printChars(' ', TOP_HEIGHT);
+            
+            // the handle itself
+            System.out.print("|");
+            printChars(':', 2*TOP_HEIGHT - 2);
+            System.out.print("|");
+            
+            System.out.println();
+        }
+    }
+    
+    /*
+     * draws the line of characters at the very bottom of the torch
+     */
+    public static void drawBottom() {
+        // spaces to the left of the bottom
+        printChars(' ', TOP_HEIGHT);
+        
+        // the bottom itself
+        System.out.print("+");
+        printChars('=', 2*TOP_HEIGHT - 2);
+        System.out.print("+");
+        
+        System.out.println();
+    }
+}

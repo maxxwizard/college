@@ -1,0 +1,33 @@
+/**
+ * SquareRootCalculator.java
+ * Computer Science 111, Boston University
+ * 
+ * base code provided by the course staff
+ * 
+ * algorithm implemented by: <put your name and email here> 
+ * 
+ * This program computes gradually improving estimates
+ * of the square root of a number using Newton's method.
+ */
+
+import java.util.*;
+
+public class SquareRootCalculator {
+    public static void main(String[] args) {
+        int x;             // the number whose root we wish to find
+        int numImproves;   // the number of times to improve the
+                           // guess
+
+        // Read the values from the user.
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Input a positive integer (x): ");
+        x = scan.nextInt();
+        System.out.print("Number of times to improve the estimate: ");
+        numImproves = scan.nextInt();
+        
+        
+        // *** Fill in the rest of the program below. ***
+        
+        
+    }
+}

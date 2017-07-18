@@ -1,0 +1,8 @@
+Matthew Huynh
+U85462311
+Lab 07
+November 1, 2010
+
+Exercise 1
+=========
+b. The Java program uses a mouse listener that runs event handlers when an event such as a mouse move, mouse click, mouse release, or mouse drag happens. The contents of the canvas are redrawn with each mouse event in order to update the text.

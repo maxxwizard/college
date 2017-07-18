@@ -1,0 +1,37 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+a.   i. 1
+    ii. "err"
+   iii. "RIERS!"
+    iv. "RIERS!"
+     V. "gerriers!"
+
+b.   i. str1 + " " + str2
+    ii. str1.toUpperCase() + str2.charAt(0) + str2.charAt(8)
+   iii. str1 + str2.charAt(1) + str2.substring(7)
+    iv. str1.toLowerCase().charAt(0)
+     v. str2.replace('r', 'n')
+
+c. The == operator compares memory addresses and not the actual content. Variable one is stored at a different memory address than variable three.
+
+2)
+
+a.   i. Trees
+        Chestnut
+        Done
+    ii. Trees
+        Larch
+        Done
+   iii. Cheese Shoppe
+        Cheddar
+        Gouda
+        Done
+    iv. Spam Please!
+        Done
+     v. It's a late parrot!
+        Done
+
+b. The String "Swiss" will never be printed because it's impossible for b == c after it has passed through the condition that b > c.

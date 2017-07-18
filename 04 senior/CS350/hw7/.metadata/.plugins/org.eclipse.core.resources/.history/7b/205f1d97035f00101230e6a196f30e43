@@ -1,0 +1,13 @@
+
+public class Global {
+	public static volatile boolean[] flag = {false,false};
+	public static volatile int turn = 0;
+	
+	public static void resetFlags()
+	{
+		for (boolean val : flag)
+		{
+			val = false;
+		}
+	}
+}

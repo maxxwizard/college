@@ -1,0 +1,56 @@
+Matthew Huynh
+CS350 - HW8
+April 12, 2011
+
+Exercise 1
+==========
+a) The above code states that when a process Pi arrives, it will signal its corresponding semaphore to say it's arrived. It then checks that all the processes have arrived. Essentially, each semaphore gets checked by all the other processes, which means that all the processes will not proceed on until they've all "arrived."
+
+semaphore[i] should be initialized to 0. Process Pi first increases its semaphore by 1, noting it has arrived. Any processes waiting on it will be notified due to the signal.
+
+b) A process could block if one of the party members finished execution after running its rendezvous code.
+
+c) The last instruction in the above code is included because it allows the party to rendezvous again, i.e. it lowers a process' flag that says it has arrived.
+
+Exercise 2
+==========
+a) A thread enters allocate() and checks that a machine is available at available[i], at which point it gets preempted. Another thread enters allocate() and checks available[i] as well. Now both threads will get the same return value of i because the array available[] is a shared resource that isn't protected.
+
+b) To fix the pseudocode, simply surround accesses to array available[] with a semaphore mutex initialized to 1.
+
+int allocate() /* Returns index of available machine */
+{
+  wait(nfree); /* Wait until a machine is available */
+  for (int i=0; i < M; i++)
+    wait(mutex); /* only 1 thread allowed to access array available[] at a time */
+    if (available[i]) {
+      available[i] = FALSE;
+      signal(mutex);
+      return i;
+    }
+}
+
+void return(int machine) /* Make machine available again */
+{
+  wait(mutex);
+  available[machine] = TRUE;
+  signal(mutex);
+  signal(nfree);
+}
+
+Exercise 3
+==========
+folder CS350Semaphore
+
+mutexV = 1, protects the array V[]
+mutexCS = 1, protects the "CS", i.e only 1 process inside the CS
+
+This template can be used to design a protocol because the scheduler's metric can be changed to anything (right now, it is choosing lowest process ID). If we wanted to change the metric to EDF, we would simply have the scheduler check each thread's deadline and choose the earliest one. If we wanted to give priority to the process that used the CS the least, we could have the scheduler keep track of this data in an array and then choose the process that has the smallest number of entries into its CS.
+
+Exercise 4
+==========
+folder CS350FSCAN
+
+Compile with javac. Run with java with optional parameters.
+
+usage: java Main <numOfClients=5> <numOfRequestsPerClient=3>

@@ -1,0 +1,7 @@
+past:
+- refined the schedule
+- split up the remaining work
+
+future:
+- system testing
+- user documentation

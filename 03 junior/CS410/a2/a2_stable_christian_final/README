@@ -1,0 +1,7 @@
+Matthew Huynh
+Christian Ling
+CS410 - West
+Assignment 2
+
+- The GNU readline library is used. The program should compile just fine on any Linux machine that has the readline library installed.
+- The shell's & function is buggy. It will work properly on Mac OSX so that is what we will demo it on.

@@ -1,0 +1,12 @@
+
+public class Global {
+	public static int[] flag = {0,0};
+	
+	public static void resetFlags()
+	{
+		for (int val : flag)
+		{
+			val = 0;
+		}
+	}
+}

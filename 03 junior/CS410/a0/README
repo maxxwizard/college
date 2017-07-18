@@ -1,0 +1,33 @@
+----------------------
+. Matthew Huynh      .
+. CS410 - West       .
+. February 16, 2010  .
+. README for a0      .
+----------------------
+
+=========================
+COMPILATION
+=========================
+All 4 executables (getsections, getsyms, getsections_dl, getsyms_dl)
+are automatically compiled via the make tool. Simply browse to the
+directory via the command prompt and run the command "make".
+
+=========================
+EXECUTION
+=========================
+Set the environment variable LD_LIBRARY_PATH to dot (".") or the full
+pathname to the directory containing "libobjdata.so". Then the two
+dl'ed executables will run.
+
+=========================
+CLEANUP
+=========================
+To clean the directory of all executable, object, and library files,
+run a "make cleanall" command. To remove just the object files, run
+a "make clean" command.
+
+=========================
+TESTING
+=========================
+A simple Bash script (stats_generation.sh) was run on kanga.bu.edu
+to generate the `stats` file.

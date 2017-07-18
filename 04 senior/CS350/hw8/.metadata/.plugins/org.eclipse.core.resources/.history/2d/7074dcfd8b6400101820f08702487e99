@@ -1,0 +1,97 @@
+
+public class CameraThread extends Thread {
+	public int numRequestsServed;
+	
+	public CameraThread() {
+		numRequestsServed = 0;
+	}
+
+	public void run() {
+		while (true)
+		{
+			// sleep for 500ms (to wait for some requests to queue up)
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			// process queue
+			// acquire mutex to buffer queue
+			// swap buffer and process queues
+		}
+	}
+	
+	/* 
+	 * wait on totalReqCounter
+	 * acquire mutexReqCounts
+	 * select next request according to FSCAN
+	 * delay proportional to time it takes camera to move
+	 * signal semaphores[request] reqCounts[request] times
+	 * clear reqCounts[request]
+	 * release mutexReqCounts
+	 */
+	void processQueue()
+	{
+		try {
+			Thread.sleep(500);
+			Main.processQueue.totalReqCounter.acquire();
+			Main.processQueue.mutexReqCounts.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		int request = selectNextRequest();
+		if (request == -1)
+		{
+			try {
+				throw new Exception("camera thread awoken with no requests in queue!");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		cameraDelay(request);
+		int numThreadsWaiting = Main.processQueue.reqCounts[request];
+		numRequestsServed += numThreadsWaiting;
+		Main.processQueue.reqCounts[request] = 0;
+		Main.processQueue.semaphores[request].release(numThreadsWaiting);
+		Main.processQueue.mutexReqCounts.release();
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+	
+	void printBothQueues()
+	{
+		System.out.print(" buffer: ");
+		Main.bufferQueue.printQueue();
+		System.out.print("process: ");
+		Main.processQueue.printQueue();
+	}
+	
+	/*
+	 * Selects the next request according to FSCAN.
+	 */
+	int selectNextRequest()
+	{
+		printBothQueues();
+		for (int i = 0; i < Main.processQueue.reqCounts.length; i++)
+		{
+			if (Main.processQueue.reqCounts[i] > 0)
+			{
+				printLine("selected angle " + i);
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/*
+	 * Delays the thread proportional to how much the
+	 * camera has to move.
+	 */
+	void cameraDelay(int request)
+	{
+		
+	}
+}

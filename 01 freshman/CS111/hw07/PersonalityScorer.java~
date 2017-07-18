@@ -1,0 +1,79 @@
+/*
+ * PersonalityScorer.java
+ * 
+ * name: Matthew Huynh
+ * email: mhuynh@bu.edu
+ * 
+ * description: 
+ */
+
+import java.io.*;
+import java.util.*;
+
+public class PersonalityScorer {
+    public static final Scanner CONSOLE = new Scanner(System.in);
+    public static final int COMPONENTS = 4;
+    public static final int NUMGROUPQUESTIONS = 10;
+    
+    public static void main(String[] args) throws FileNotFoundException {
+        
+        // ask user for input file
+        File answers = askForInputFile();
+        
+        // asks user for output file name and creates the output object for printing results
+        PrintStream output = new PrintStream(askForOutputFile());
+        
+        // parse file
+        
+        // output to new file
+        
+    }
+    
+    /* 
+     * askForInputFile - asks the user for the name of the input file
+     * and returns a File object if the file exists
+     */
+    public static File askForInputFile() {
+        
+        System.out.print("Input file name: ");
+        String fileName = CONSOLE.nextLine();
+        File results = new File(fileName);
+        
+        while (!results.exists()) {
+            System.out.print("File not found. Try again: ");
+            fileName = CONSOLE.nextLine();
+            results = new File(fileName);
+        }
+        
+        return results;
+    }
+    
+    /* 
+     * askForOutputFile - asks the user for the name of
+     * the output file and returns a File object
+     */
+    public static File askForOutputFile() {
+        
+        System.out.print("Output file name: ");
+        String fileName = CONSOLE.nextLine();
+        File results = new File(fileName);
+        
+        return results;
+    }
+
+    /*
+     * parseFile - 
+     */ 
+    public static void parseFile(File file) throws FileNotFoundException {
+        Scanner input = new Scanner(file);
+        
+        while (input.hasNextLine()) {
+            String personName = input.nextLine();
+            String personAnswers = input.nextLine();
+            
+            
+        }
+        
+    }
+    
+}

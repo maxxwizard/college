@@ -1,0 +1,161 @@
+
+public class CameraThread extends Thread {
+	public int numRequestsServed;
+	public int carsReleased;
+	public int carsInLane;
+	public Direction direction;
+	
+	public CameraThread() {
+		direction = Direction.NORTH;
+		numRequestsServed = 0;
+		carsReleased = 0;
+		carsInLane = 0;
+	}
+
+	/*
+	 * wait on totalCarCounter
+	 * if (carsReleased = X_MAX_CARS_WAIT)
+	 *    reset()
+	 * acquireQueue()
+	 * if (queue is not empty && carsInLane <= C_MAX_CARS_IN_LANE)
+	 * {
+	 *    carsInLane++
+	 *    remove front of queue
+	 *    releaseBarrier()
+	 * }
+	 * releaseQueue()
+	 */
+	public void run() {
+		while (true)
+		{
+			// wait on totalReqCounter
+			try {
+				Main.pendingRequests.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/* 
+	 * print both queues
+	 * move camera to highest/lowest request in the current direction
+	 * flip direction
+	 * iterate up or down of new current direction
+	 *   process each request
+	 *   clear reqCounts[request][]
+	 */
+	void processQueue()
+	{
+		printBothQueues();
+		
+		currentAngle = getStartingPosition();
+		
+		d = (d == Direction.UP) ? Direction.DOWN : Direction.UP;
+		
+		System.out.println("Direction is " + d);
+		
+		if (d == Direction.UP)
+		{
+			for (int i = currentAngle; i < Main.processQueue.reqCounts.length; i++)
+			{
+				int waitingThreads = Main.sum(Main.processQueue.reqCounts[i]);
+				if (waitingThreads > 0)
+				{
+					serviceRequest(i, waitingThreads);
+				}
+				for (int j = 0; j < Main.processQueue.reqCounts[i].length; j++)
+				{
+					Main.processQueue.reqCounts[i][j] = 0;
+				}
+			}
+		} else {
+			for (int i = currentAngle; i >= 0; i--)
+			{
+				int waitingThreads = Main.sum(Main.processQueue.reqCounts[i]);
+				if (waitingThreads > 0)
+				{
+					serviceRequest(i, waitingThreads);
+				}
+				for (int j = 0; j < Main.processQueue.reqCounts[i].length; j++)
+				{
+					Main.processQueue.reqCounts[i][j] = 0;
+				}
+			}
+		}
+	}
+	
+	int getStartingPosition()
+	{
+		int startPos = -1;
+		if (d == Direction.UP)
+		{
+			for (int i = Main.processQueue.reqCounts.length-1; i >= 0 && startPos == -1; i--)
+			{
+				if (Main.sum(Main.processQueue.reqCounts[i]) > 0)
+					startPos = i;
+			}
+		} else {
+			for (int i = 0; i < Main.processQueue.reqCounts.length && startPos == -1; i++)
+			{
+				if (Main.sum(Main.processQueue.reqCounts[i]) > 0)
+					startPos = i;
+			}
+		}
+		return startPos;
+	}
+	
+	/*
+	 * Delays the thread proportional to how much the camera has to move.
+	 * Signal semaphores[requestedAngle] waitingThreads times (to wake up those clients).
+	 * Acquire totalReqCounter waitingThreads times.
+	 * Increment numRequestsServed waitingThreads times.
+	 * Then set the current angle to the serviced angle.
+	 */
+	void serviceRequest(int requestedAngle, int waitingThreads)
+	{
+		int angleDifference = Math.abs(requestedAngle-currentAngle);
+		try {
+			Thread.sleep(angleDifference * 100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Main.processQueue.semaphores[requestedAngle].release(waitingThreads);
+		try {
+			Main.totalReqCounter.acquire(waitingThreads);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		currentAngle = requestedAngle;
+		numRequestsServed += waitingThreads;
+		printLine("serviced angle " + requestedAngle + " for client(s) " + clientIdsForAngle(requestedAngle));
+	}
+	
+	String clientIdsForAngle(int requestedAngle)
+	{
+		String s = "";
+		for (int i = 0; i < Main.processQueue.reqCounts[requestedAngle].length; i++)
+		{
+			if (Main.processQueue.reqCounts[requestedAngle][i] > 0)
+			{
+				if (s != "")
+					s += ", ";
+				s += i;
+			}
+		}
+		return s;
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+	
+	void printBothQueues()
+	{
+		System.out.print(" buffer: ");
+		Main.bufferQueue.printQueue();
+		System.out.print("process: ");
+		Main.processQueue.printQueue();
+	}
+}

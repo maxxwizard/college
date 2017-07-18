@@ -1,0 +1,55 @@
+/*
+ * MovieDB.java
+ * 
+ * name:
+ * email:
+ * 
+ * description:
+ */
+
+import java.io.*;
+import java.util.*;
+
+public class MovieDB {
+    public static final String MOVIE_FILE = "movie.dat";
+    public static final String DIRECTOR_FILE = "director.dat";
+    
+    /*
+     * movieWithRank - searches through the movie data file for the movie
+     * with the specified rank and returns a String of the form 
+     * "movie name (year released)".
+     * 
+     * preconditions: rank >= 1 and rank <= 200
+     */ 
+    public static String movieWithRank(int rank) throws FileNotFoundException {
+        if (rank < 1 || rank > 200) {
+            throw new IllegalArgumentException("invalid rank: " + rank);
+        }
+        
+        Scanner input = new Scanner(new File(MOVIE_FILE));
+        while (input.hasNextLine()) {
+            Scanner data = new Scanner(input.nextLine());
+
+            // Because the movie name may include spaces, we
+            // tell the Scanner to use only tabs to break the line
+            // into tokens. (We don't need to include newline characters
+	    // because we know the String won't contain any.)
+            data.useDelimiter("[\t]");
+            
+            int id = data.nextInt();
+            String name = data.next();
+            int year = data.nextInt();
+            int thisRank = data.nextInt();
+            
+            if (thisRank == rank) {
+                String nameYear = name + " (" + year + ")";
+                return nameYear;
+            }
+        }
+        
+        // Just in case there isn't a movie with the specified rank,
+        // although there should be given our error-checking code
+        // at the start of the method.
+        return "no such movie";   
+    }
+}

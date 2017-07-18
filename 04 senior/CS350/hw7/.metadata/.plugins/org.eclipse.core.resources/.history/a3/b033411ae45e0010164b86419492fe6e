@@ -1,0 +1,34 @@
+import java.util.*;
+
+public class BadThread extends Thread {
+	private int id;
+	Random rand;
+
+	public BadThread(int i) {
+		id = i;
+		rand = new Random();
+	}
+
+	public void run() {
+		for (int i = 0; i < 5; i++)
+		{
+			System.out.println("Thread i is starting iteration k");
+			this.randomSleep();
+			System.out.println("We hold these truths to be self-evident, that all men are created equal,");
+			this.randomSleep();
+			System.out.println("that they are endowed by their Creator with certain unalienable Rights,");
+			this.randomSleep();
+			System.out.println("that among these are Life, Liberty and the pursuit of Happiness.");
+			this.randomSleep();
+			System.out.println("Thread i is done with iteration k");
+		}
+	}
+	
+	private void randomSleep()
+	{
+		try {
+			Thread.sleep(rand.nextInt(21));
+		} catch (InterruptedException e) {
+		}
+	}
+}

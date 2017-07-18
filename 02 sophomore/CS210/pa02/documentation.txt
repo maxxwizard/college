@@ -1,0 +1,59 @@
+MATTHEW HUYNH
+CS210 - MATTA
+PA2 DOCUMENTATION
+
+PLANNING
+========
+I will implement quicksort on integers and then extend it to work on strings per the assignment's suggestion. I copied some code from PA01 to get myself started.
+
+Translation from C to MIPS will also be incremental.
+
+The compiling and testing will be done on my own computer intially. I am using Wascana Desktop Developer 0.9.3 for C and MARS 3.5 for MIPS. The code will then be tested on the CSA server.
+
+
+C PROGRAMMING
+=============
+1) PrintArray - recoded for strings
+2) Swap - recoded to include an array as a parameter
+3) strcmp - programming this wasn't too difficult
+4) Quicksort - used a simple implementation
+
+
+C TESTING
+=========
+1) Tested using array sizes of 3 and 6
+2) Tested by swapping array indices 0 and 1, then 1 and 2
+3) Tested by comparing random words together and printing the return value
+4) Tested on arrays of sizes 3 and 6, using the example words from the assignment
+
+
+MIPS TRANSLATION
+================
+First, I had to do some research to figure out how to create an array of pointers.
+
+Second, to keep the code somewhat readable, the Swap and StrCmp methods will preserve $t0-$t5 across its execution while the Quicksort method will only have to preserve whatever variables it uses ($ra, $a1, $a2).
+
+1) PrintArray - the old MIPS code worked with some minor changes and optimization
+2) Swap - the code had to be nearly completely written
+3) strcmp - written from scratch - i ran into some memory alignment errors and realized i was loading bytes instead of words when iterating through the strings (char arrays)
+4) Quicksort
+a. After writing the method, it compiled fine but got stuck infinitely looping. I'm going to change my C code so it's more expanded so that translation to MIPS is easier.
+b. The program runs to completion now but doesn't return the right sorted array. I'm going to check that I'm preserving the right variables so the recursion works. If that doesn't work, I'll have to run the program and debug it with Quicksort as a breakpoint.
+c. There could be something wrong with StrCmp. I'm going to run extended testing on it.
+d. StrCmp works fine, which means that the wrong arguments are being passed to StrCmp.
+e. The problem was that I was passing in the pointer's address instead of the actual string's address (i.e. I needed to "dereference" inside MIPS).
+
+
+MIPS TESTING
+============
+1) Tested using array of size 6
+2) Tested by swapping array indices 0 and 1, then 1 and 2
+3) Tested by comparing "mips" and "spim" - then "mips" and "mips"
+4) Tested using the example words given in the assignment, using different array sizes
+
+
+CONCLUSION
+==========
+The Quicksort algorithm used here is simpler and therefore is probably slower than other versions. This program can probably be optimized to reduce memory usage by reducing the amount of registers saved on the stack; there's probably some duplicate saving. However, we were looking for an exercise in recursive MIPS programming, not efficiency.
+
+This program taught me how to debug in MIPS using debug code rather than hand tracing. I also got better at managing the stack. I learned how to use pointers and pointer arrays in C.

@@ -1,0 +1,44 @@
+public class DekkerThread extends MyThread {
+
+	public DekkerThread(int i) {
+		super(i);
+	}
+
+	@Override
+	void EnterCS() {
+		int i = super.id;
+		int j = not(i);
+
+		Main.flag.set(i, 1);
+		while (Main.flag.get(j) == 1) {
+			if (Main.turn.get() == j) {
+				Main.flag.set(i, 0);
+				while (Main.flag.get(j) == 1) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				Main.flag.set(i, 1);
+			}
+		}
+	}
+
+	@Override
+	void ExitCS() {
+		int i = super.id;
+		int j = not(i);
+
+		Main.turn.set(j);
+		Main.flag.set(i, 0);
+	}
+
+	private int not(int i) {
+		if (i == 0)
+			return 1;
+		else
+			return 0;
+	}
+
+}

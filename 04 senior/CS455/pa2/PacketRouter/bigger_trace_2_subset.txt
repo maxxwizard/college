@@ -1,0 +1,14 @@
+
+# Same graph as in bigger_trace_1, but much more substantial trace
+#
+
+
+0   I  4325  <4131, 3> <6000, 7>
+3   F  4131
+5   L  6000 14 <4131, 9> <4325, 7>
+7   L  4131 15 <4325, 85> <6000, 9>
+
+#8   F  866
+#9   F  6000
+10  F  4131
+

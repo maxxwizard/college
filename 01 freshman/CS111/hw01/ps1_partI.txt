@@ -1,0 +1,49 @@
+mhuynh@cs.bu.edu
+
+1)
+
+a)
+1.    5 / 2 	  // 2
+2.    5.0 / 2.0   // 2.5
+3.    16 / 4 	  // 4
+4.    16.0 / 4.0  // 4.0
+5.    16 / 3 	  // 5
+6.    16.0 / 3.0  // 5.333333333333333
+7.    16 / 3.0 	  // 5.333333333333333
+8.    16.0 / 3 	  // 5.333333333333333
+The / operator will divide two numbers based on the more complex data type. If there is at least one double data type involved, it will use double division. If there are two integers, it will use integer division (truncate the remainder).
+
+b)
+1.    10 + 20 			// 30
+2.    "hello" + "world" 	// "helloworld"
+3.    "hello" + 20 		// "hello20"
+4.    10 + "world" 		// "10world"
+5.    "Java" + " is " + "fun" 	// "Java is fun"
+6.    "10" + "20" 		// "1020"
+7.    "10 + 20" 		// "10 + 20"
+The + operator will concatenate Strings together. It will add two number types together.
+
+c) 
+System.out.println("sum = " + 3 + 4); 	// sum = 34
+System.out.println("sum = " + (3 + 4)); // sum = 7
+The parentheses surrounding "3 + 4" in the second statement forces the compiler to evaluate it before printing it.
+
+2)
+
+a)
+1.    20 < 18 	// false
+2.    20 > 18	// true
+3.    20 < 20	// false
+4.    20 >= 18	// true
+5.    20 >= 20	// true
+6.    20 <= 18	// false
+7.    20 <= 20	// true
+8.    20 == 20	// true
+9.    20 == 18  // false
+10.   20 = 20	// Error: Bad left expression in assignment
+11.   20 != 20	// false
+12.   20 != 18  // true
+These comparison operators will return a true or false. < checks if left is less than right. > checks if left is greater than right. >= checks if left is greater or equal to right. <= checks if left is less than or equal to right. == checks if left is equal to right. != checks if left is not equal to right. = assigns the value on the right to the left side but this statement won't execute because 20 is just an integer and not a variable.
+
+b)
+Comparing a character literal to another compares them lexicographically. For example, 'a' is less than 'b' and 'z' is greater than 'a'. However, comparing uppercase characters versus lowercase characters start to reveal weird behavior. 'Y' is greater than 'X' yet 'Y' is not greater than 'x'.

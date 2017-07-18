@@ -1,0 +1,57 @@
+
+public class CameraThread extends Thread {
+	
+	public CameraThread() {
+	}
+
+	/* 
+	 * wait on totalReqCounter
+	 * acquire mutexReqCounts
+	 * select next request according to FSCAN
+	 * delay proportional to time it takes camera to move
+	 * signal semaphores[request] reqCounts[request] times
+	 * release mutexReqCounts
+	 */
+	public void run() {
+		while (true)
+		{
+			try {
+				Main.totalReqCounter.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			try {
+				Main.mutexReqCounts.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			int request = selectNextRequest();
+			cameraDelay(request);
+			int numThreadsWaiting = Main.reqCounts[request];
+			Main.semaphores[request].release(numThreadsWaiting);
+			Main.mutexReqCounts.release();
+		}
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+	
+	/*
+	 * Selects the next request according to FSCAN.
+	 */
+	int selectNextRequest()
+	{
+		return 0;
+	}
+	
+	/*
+	 * Delays the thread proportional to how much the
+	 * camera has to move.
+	 */
+	void cameraDelay(int request)
+	{
+		
+	}
+}

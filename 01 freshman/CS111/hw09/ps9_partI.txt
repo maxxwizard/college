@@ -1,0 +1,61 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+a. i. mutator
+  ii. public void rotate()
+
+b. i. accessor
+  ii. public boolean contains(int x, int y)
+
+c. i. The code assumes the fields are public, but they are private and must be accessed through methods.
+  ii. Rectangle r1 = new Rectangle(10, 25, 60, 80);
+      System.out.println("position = " + r1.getX() + ", " + r1.getY());
+      r1.setWidth(r1.getWidth() + 20);
+      System.out.println(r1);
+
+2)
+
+a. public double bar()
+b. public class Foo {
+     private int a;
+     private double b;
+
+     public Foo(int a, double b) {
+       setA(a);
+       setB(b);
+     }
+
+     public int getA() {
+       return a;
+     }
+     public double getB() {
+       return b;
+     }
+     public int setA(int a) {
+       if (a % 2 == 0)
+         this.a = a;
+       else
+         throw new IllegalArgumentException();
+     }
+     public double setB(double b) {
+       if (b >= 0)
+         this.b = b;
+       else
+         throw new IllegalArgumentException();
+     }
+
+     public double bar() {
+       return a * b;
+     }
+   }
+
+3)
+
+The modify method in the Rectangle class isn't coded properly because
+the y field and the height field aren't changed.
+
+The following output is produced instead:
+5 0
+50 10

@@ -1,0 +1,31 @@
+public class PetersonThread extends MyThread {
+
+	public PetersonThread(int i) {
+		super(i);
+	}
+
+	@Override
+	void EnterCS() {
+		int i = super.id;
+		int j = not(i);
+
+		Global.turn = j; 
+	    Global.flag[i] = true;
+	    while (Global.flag[j] && Global.turn==j) {};
+	}
+
+	@Override
+	void ExitCS() {
+		int i = super.id;
+
+		Global.flag[i] = false;
+	}
+
+	private int not(int i) {
+		if (i == 0)
+			return 1;
+		else
+			return 0;
+	}
+
+}

@@ -1,0 +1,113 @@
+MATTHEW HUYNH
+CS210 - MATTA
+OCTOBER 31, 2008
+PROGRAMMING ASSIGNMENT #1
+
+#-------------------------------------------------
+# PART 1
+#-------------------------------------------------
+
+# --- PLANNING ---
+
+The program will be written in parts and tested at each point.
+
+1) PrintArray method
+2) Swap method
+3) MinPosition method
+4) Sort method
+5) main method
+
+# --- PROGRAMMING ---
+
+1)
+# PrintArray's register usage:
+# $a0 = array's starting address, Array[i]
+# $a1 = array size
+# $t0 = i
+# $t1 = i < n
+# $t2 = i*4
+# $t3 = &Array[i]
+# $t4 = Array[i]
+# $t5 = &space
+
+2)
+# Swap's register usage:
+# $a0 = &x
+# $a1 = &y
+# $t0 = x
+# $t1 = y
+
+3)
+# MinPosition's register usage:
+# $a0 = &Array[0]
+# $a1 = array index start
+# $a2 = array index stop
+# $t0 = &Array[start]
+# $t1 = minpos
+# $t2 = index
+# $t3 = stop + 1
+# $t4 = index <= stop
+# $t5 = &Array[index]
+# $t6 = Array[index]
+# $t7 = Array[index] < min
+# $t8 = min
+# $t9 = used for memory byte addresses
+
+4)
+# Sort's register usage:
+# $a0 = &Array[0]
+# $a1 = array size
+# $v0 = MinPosition(Arr, i, n-1)
+# $s0 = i
+# $s1 = MinPos
+# $s2 = n-1
+# $t0 = (i < n-1)
+# $t1 = &Array[i], &Array[MinPos]
+# $t2 = &Array[0]
+# $t9 = used for memory byte addresses
+
+5)
+The main method is easy to code. I actually used it often to debug the other methods.
+
+# --- TESTING ---
+
+1) I encountered some syntax errors and some incorrect variable placements.
+
+2) There were a logic error and some syntax errors. I swapped a few elements around to make sure the method worked.
+
+3) 1 logic error, forgot to multiply indexes by 4 to get byte addresses, some wrong variable placements. I tested by using the method on an array of 4 elements with the following ($a1,$a2) pairs: (0,1) (0,2) (0,3) (1,1) (1,2) (1,3) (3,1)
+
+4) There are a lot of problems so I re-tested the first 3 methods in more depth before implementing this one. They all checked out fine so the problem must be in the Sort method or how registers are being preserved because the stack is giving back bad data. It turns out this last bug was caused by 2 lines of code. One line was overwriting the value of $a0 and the second line was using $a0, but incorrectly assuming the old value.
+
+5) The main method is easy to test because the sorted array will be sorted from lowest to highest.
+
+#-------------------------------------------------
+# PART 2
+#-------------------------------------------------
+
+# --- PLANNING ---
+
+I will add the C version of the method in ssort.c, then the add the MIPS version in ssort.s. Each file will be compiled and tested.
+
+# --- PROGRAMMING ---
+
+My code assumes n >= 0.
+
+The C method was programmed and optimized for easy assembly translation.
+
+MIPS version's register usage:
+# Median's register usage:
+# $a0 = &Array[0]
+# $a1 = array size
+# $v0 = returns the median
+# $s0 = A
+# $s1 = B
+# $t0 = n/2
+# $t1 = n % 2
+# $t9 = used for memory byte addresses
+
+# --- TESTING ---
+
+The C code was tested on acs.bu.edu using an array of size 8 and 9.
+
+The MIPS code was tested using the example arrays given in the question.

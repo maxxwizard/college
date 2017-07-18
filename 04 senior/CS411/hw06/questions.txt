@@ -1,0 +1,16 @@
+Matthew Huynh
+U85462311
+CS411 - Keklak
+Assignment 6
+
+1. Brooks would approve of our use of a test harness because it allows a test suite to be re-run over each new version of the program to test for regression. This test harness is best paired with iterative development and so the program would develop incrementally and stay fairly bugfree. In addition, the test harness encourages the code to be split into modules.
+
+It also allows a test person or test team to manage the test cases while a developer or development team continues to code the program.
+
+2. The representation of the checkerboard is two strings, one for each player. To someone unfamiliar with the code, I would tell them that the game logic engine works on fairly simple data representation and communicates with the rest of the game modules through an API. The meat of the API is in a single method that takes in a string that includes the command as well as the arguments.
+
+3. See Java code files.
+
+4. See Java code files.
+
+5. Code-and-fix is dangerous because there is no risk identifying, no schedule creation, and no quality assurance. You don't know if there are any big obstacles or flaws in your plan, you don't know when you will be done, and you most likely don't know if the final product will be of any quality.

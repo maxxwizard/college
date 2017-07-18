@@ -1,0 +1,15 @@
+
+public class CameraThread extends Thread {
+	
+	public CameraThread() {
+	}
+
+	public void run() {
+		
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+}

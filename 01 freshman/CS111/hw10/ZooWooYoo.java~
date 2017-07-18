@@ -1,0 +1,30 @@
+public class Woo extends Zoo {
+    public String one() {
+        return "wee";
+    }
+    public String extra() {
+        return "eek";
+    }
+}
+public class Zoo {
+    public String one() {
+        return "zee";
+    }
+    public String two() {
+        return "zow";
+    }
+}
+public class Yoo extends Woo {
+    public String two() {
+        return "yow";
+    }
+}
+
+public static void main(String[] args) {
+    Woo w1 = new Woo();
+    Zoo z1 = new Woo();
+    Zoo z2 = new Yoo();
+    System.out.println(w1.one() + " " + w1.two() + " " + w1.extra());
+    System.out.println(z1.one() + " " + z1.two() + " " + z1.extra());
+    System.out.println(z2.one() + " " + z2.two() + " " + z2.extra());
+}

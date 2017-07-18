@@ -1,0 +1,43 @@
+Matthew Huynh
+mhuynh@bu.edu
+
+1)
+
+a) This method counts down from a given number, printing each subsequent number on a line.
+b) The method prints the number n and then calls itself to print n-1. It does this repeatedly until n finally becomes 0.
+c) The base case is when the number is less than or equal to 0.
+d) countDown(4):
+     System.out.println(4);
+     countDown(3):
+       System.out.println(3);
+       countDown(2):
+         System.out.println(2);
+         countDown(1):
+           System.out.println(1);
+           countDown(0):
+             return;
+
+2)
+
+a) mystery(1, 8) calls mystery(2, 6)
+     mystery(2, 6) calls mystery(3, 4)
+       mystery(3, 4) calls mystery(4, 2)
+         mystery(4, 2) returns 4
+       mystery(3, 4) returns 1+4 or 5
+     mystery(2, 6) returns 1+5 or 6
+   mystery(1, 8) returns 1+6 or 7
+b) 7
+c) 4
+d) If a was 1 and b was 0, the base case would never be reached because a would keep increasing while b is decreasing. b will therefore never be greater than a.
+
+3)
+
+public static boolean search(int num, int[] arr, int pos) {
+    if (pos == arr.length)
+        return false;
+
+    if (arr[pos] == num)
+        return true;
+
+    return search(num, arr, pos+1);
+}

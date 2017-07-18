@@ -1,0 +1,17 @@
+total 720
+-rw-r--r--@   1 cfaito  staff    1224 Apr 15 20:39 Makefile
+-rw-r--r--@   1 cfaito  staff     300 Apr 15 20:39 README
+-rw-r--r--    1 cfaito  staff      29 Apr 15 06:12 input_matrix
+-rwxr-xr-x    1 cfaito  staff    9116 Apr 23 14:32 matformatter
+-rw-r--r--    1 cfaito  staff    1099 Apr 15 06:12 matformatter.c
+-rwxr-xr-x    1 cfaito  staff    9732 Apr 23 14:32 matmult_p
+-rw-r--r--    1 cfaito  staff    6596 Apr 15 06:12 matmult_p.c
+-rwxr-xr-x    1 cfaito  staff    8768 Apr 23 14:32 multiply
+-rw-r--r--    1 cfaito  staff    2500 Apr 15 06:12 multiply.c
+-rwxr-xr-x    1 cfaito  staff  253348 Apr 23 14:32 myshell
+-rw-r--r--@   1 cfaito  staff   12634 Apr 15 20:41 myshell.c
+-rw-r--r--    1 cfaito  staff   13856 Apr 23 14:32 myshell.o
+-rw-r--r--    1 cfaito  staff       0 Apr 23 14:33 output
+drwxr-xr-x  114 cfaito  staff    3876 Apr  5 17:20 readline
+-rwxr-xr-x    1 cfaito  staff    8692 Apr 23 14:32 test_matrix
+-rw-r--r--    1 cfaito  staff     793 Apr 15 06:12 test_matrix.c

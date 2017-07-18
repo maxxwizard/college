@@ -1,0 +1,12 @@
+
+public class Global {
+	public static boolean[] flag = {false,false};
+	
+	public static void resetFlags()
+	{
+		for (boolean val : flag)
+		{
+			val = false;
+		}
+	}
+}

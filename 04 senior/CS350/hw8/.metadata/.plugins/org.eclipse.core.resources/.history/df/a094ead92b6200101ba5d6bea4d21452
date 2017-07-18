@@ -1,0 +1,22 @@
+
+public class CameraThread extends Thread {
+	
+	public int id;
+
+	public CameraThread(int i) {
+		id = i;
+	}
+
+	public void run() {
+	}
+	
+	void doWork()
+	{
+		printLine("is in the CS");
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Thread " + this.id + " " + s);
+	}
+}

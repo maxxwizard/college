@@ -1,0 +1,495 @@
+/*
+ * Matthew Huynh
+ * CS410 - West
+ * Assignment 2
+ */
+
+#include <string.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <setjmp.h>
+
+#if defined (READLINE_LIBRARY)
+#	include "readline.h"
+#	include "history.h"
+#else
+#	include <readline/readline.h>
+#	include <readline/history.h>
+#endif
+
+#define DEBUG 1
+
+static void sig_chld(int); /* SIGCHLD signal handler */
+static void parseExec(char *command, sigset_t *unblock); /* parses a command for args and redirection, then execs it */
+static char *trim(char *str); /* stolen function that trims a string and returns it */
+
+static sigjmp_buf jmpbuf; /* used for jumping back to prompt */
+
+static volatile sig_atomic_t sigflag;
+static sigset_t newmask, oldmask, zeromask;
+
+static void
+sig_usr(int signo)
+{
+	sigflag = 1;
+}
+
+void
+TELL_WAIT(void)
+{
+	if (signal(SIGUSR1, sig_usr) == SIG_ERR)
+		fprintf(stderr, "signal(SIGUSR1) error\n");
+	if (signal(SIGUSR2, sig_usr) == SIG_ERR)
+		fprintf(stderr, "signal(SIGUSR2) error\n");
+	sigemptyset(&zeromask);
+	sigemptyset(&newmask);
+	sigaddset(&newmask, SIGUSR1);
+	sigaddset(&newmask, SIGUSR2);
+	
+	if (sigprocmask(SIG_BLOCK, &newmask, &oldmask) < 0)
+		perror("SIG_BLOCK error");
+}
+
+void
+TELL_PARENT(pid_t pid)
+{
+	kill(pid, SIGUSR2); // tell parent we're done
+}
+
+void
+WAIT_PARENT(void)
+{
+	while (sigflag == 0)
+		sigsuspend(&zeromask); // and wait for parent
+	sigflag = 0;
+	
+	if (sigprocmask(SIG_SETMASK, &oldmask, NULL) < 0)
+		perror("SIG_SETMASK error");
+}
+
+void
+TELL_CHILD(pid_t pid)
+{
+	kill(pid, SIGUSR1); // tell child we're done
+}
+
+void
+WAIT_CHILD(void)
+{
+	while (sigflag = 0)
+		sigsuspend(&zeromask);
+	sigflag = 0;
+	
+	if (sigprocmask(SIG_SETMASK, &oldmask, NULL) < 0)
+		perror("SIG_SETMASK error");
+}
+
+int main (int argc, char *argv[])
+{
+	char *prompt = "myshell> ";
+	char *line, *temp, *ptr;
+	int cmdc, i, j, k;
+	char **commands = NULL;
+	int status, pid;
+	
+	sigset_t sigintSet;
+	sigemptyset(&sigintSet);
+	sigaddset(&sigintSet, SIGINT);
+	
+	// for debugging purposes, make stdout unbuffered
+	setvbuf(stdout, NULL, _IONBF, 0);
+	
+	// Block SIGINT for myshell.
+	if (sigprocmask(SIG_BLOCK, &sigintSet, NULL) < 0) {
+		perror("SIGINT block for myshell error");
+	}
+	
+	// Register SIGCHLD handler for myshell.
+	if (signal(SIGCHLD, sig_chld) == SIG_ERR) {
+		perror("signal(SIGCHLD) error");
+	}
+
+	// We siglongjmp back to here if user send SIGINT (control+c) to a foreground process.
+	sigsetjmp(jmpbuf, 1);
+PROMPT:
+	while (line = readline (prompt)) {
+		// If user just hits enter/return.
+		if (strlen(line) == 0)
+			continue;
+		
+		//printf("line: %s\n", line);
+		
+		// Tokenize the string into commands (delimiter ";").
+		temp = line;		
+		cmdc = 0;
+		ptr = strtok (temp, ";");
+		while (ptr != NULL) {
+			cmdc++;
+			commands = (char**) realloc (commands, (cmdc)*sizeof(char*)); // (re)alloc commands array
+			commands[cmdc-1] = (char*) malloc (strlen(ptr)*sizeof(char)); // malloc space for actual cmd
+			if (commands[cmdc-1] == NULL) {
+				fprintf(stderr, "Error allocating memory.\n");
+				exit(1);
+			}
+			commands[cmdc-1] = ptr; // store actual command
+			ptr = strtok (NULL, ";"); // move to next command
+		}
+		
+		// Parse each command.
+		for (i = 0; i < cmdc; i++) {
+		
+			TELL_WAIT(); // set up things for TELL_xxx & WAIT_xxx
+			
+			// boolean variable that lets the shell know if it should actively wait for the child or not
+			int background = 0;
+			if (strstr(commands[i], "&") != NULL)
+				background = WNOHANG;
+			
+			// Check for piping.
+			if (strchr(commands[i], '|') != NULL) {
+				if (DEBUG) printf("Command is piped.\n");
+				
+				// Parse each command with delimiter '|'.
+				char **pipedCommands = NULL;
+				int pipedC = 0;
+				char *pipePtr = strtok(commands[i], "|");
+				while (pipePtr != NULL) {
+					pipedC++;
+					//char *trimmedC = trim(pipePtr);
+					pipedCommands = (char**) realloc (pipedCommands, (pipedC)*sizeof(char*)); // (re)alloc pipedCommands array
+					pipedCommands[pipedC-1] = (char*) malloc (strlen(trim(pipePtr))*sizeof(char)); // malloc space for actual piped cmd
+					if (pipedCommands[pipedC-1] == NULL) {
+						fprintf(stderr, "Error allocating memory.\n");
+						exit(1);
+					}
+					pipedCommands[pipedC-1] = trim(pipePtr); // store actual piped command
+					pipePtr = strtok(NULL, "|"); // move to next piped command
+				}
+				// Debugging
+				if (DEBUG && pipedC > 0) {
+					int m;
+					for (m = 0; m < pipedC; m++) {
+						printf("pipedCommands[%d]: %s\n", m, pipedCommands[m]);
+					}
+					printf("\n");
+				}
+				//---------------
+				
+				// For each piped command:
+				// 1) Create a pipe - mypipe[i][0] = child, mypipe[i][1] = parent.
+				// 2) Fork a child that executes the command before the pipe.
+				//    - Close pipe[i][1]
+				//	  - if (i != 0) // if not first child
+				//			Child's stdin is pipe[i-1][1]
+				//    - if (i != pipedC-1) // if there is another command in the pipeline
+				//			Child's stdout redirected to mypipe[i][0]
+				//      else
+				//			Child's stdout is reset to terminal
+				//	  - ParseExec
+				// 3) Parent waits for child.
+				//	  - Wait for child.
+				//	  - Close pipe[i][0]
+				
+				// Create pipes for use.
+				int mypipe[pipedC][2];
+				
+				// Save terminal fd's.
+				int ttyStdin = dup(0);
+				int ttyStdout = dup(1);
+				int ttyStderr = dup(2);
+				
+				// For each piped command...
+				int m;
+				for (m = 0; m < pipedC; m++) {
+					if (DEBUG) printf("piped command '%s'\n", pipedCommands[m]);
+					if (pipe(mypipe[m]))
+						fprintf(stderr, "mypipe[%d] creation error\n", m);
+					else {
+						int n, o;
+						/* DEBUGGING
+						printf("==== MYPIPE ====\n");
+						for (n = 0; n < pipedC; n++) {
+							for (o = 0; o < 2; o++)
+								printf("mypipe[%d][%d] = %d\n", n, o, mypipe[n][o]);
+						}
+						printf("================\n");
+						*/
+					}
+					
+					pid = vfork();
+					if (pid < 0) {
+						perror("piped vfork() error");
+					} else if (pid == 0) { // child
+						if (DEBUG) printf("CHILD %d of PARENT %d executing (%s)\n", getpid(), getppid(), pipedCommands[m]);
+						if (m != 0) {
+							if (DEBUG) printf("Redirecting stdin to mypipe[%d][0] (fd %d)\n", m-1, mypipe[m-1][0]);
+							// Debugging
+							/*
+							FILE *stream;
+							int c;
+							if (!(stream = fdopen(mypipe[m-1][0], "r")))
+								perror("error opening pipe");
+							while ((c = fgetc (stream)) != EOF ) {
+								putchar (c);
+							}
+							fclose (stream);
+							 */
+							// --------------
+							dup2(mypipe[m-1][0], 0);
+						}
+						if (m != pipedC-1) {
+							if (DEBUG) printf("Redirecting stdout/stderr to mypipe[%d][1] (fd %d)\n", m, mypipe[m][1]);
+							dup2(mypipe[m][1], 1);
+							dup2(mypipe[m][1], 2);
+						} else {
+							if (DEBUG) printf("Resetting stdout/stderr to terminal (fd %d)\n", ttyStdout);
+							dup2(ttyStdout, 1);
+							dup2(ttyStderr, 2);
+						}
+						// Execute the command.
+						parseExec(pipedCommands[m], &sigintSet);
+					} else { // parent
+						if (DEBUG) printf("PARENT %d executing (parent to %s)\n", getpid(), pipedCommands[m]);
+						// Display alert that child process is running in background.
+						if (background != 0) {
+							printf("Child %d running in background\n", pid);
+							if (waitpid(pid, &status, WNOHANG) == -1) {
+								perror("unpiped waitpid error");
+							}
+							goto PROMPT; // return to prompt
+							/*
+							do {
+								if (waitpid(pipePid, &status, WNOHANG) == -1) {
+									perror("unpiped waitpid error");
+								}
+							} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+							 */
+						} else {
+							// wait for child
+							do {
+								if (waitpid(pid, &status, 0) == -1) {
+									if (errno != ECHILD)
+										perror("unpiped waitpid error");
+								}
+							} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+						}
+						// Once child finishes, close the pipe (i.e. "null-terminate" it).
+						close(mypipe[m][1]);
+					}
+				}
+				 
+				// Change stdin/stdout/stderr back to terminal.
+				dup2(ttyStdin, 0);
+				dup2(ttyStdout, 1);
+				dup2(ttyStderr, 2);
+			}
+			else {
+				if (DEBUG) printf("Command is unpiped.\n");
+				
+				// Fork a child and execute command with args array.
+				pid = fork();
+				if (pid < 0) {
+					perror("unpiped fork() error");
+				} else if (pid == 0) { // child
+					// if background, 
+					if (background != 0) { // if process is backgrounded, disconnect its TTY terminals
+						//TELL_PARENT(getppid());
+						//WAIT_PARENT();
+						fclose(stdin);
+					}
+					if (DEBUG) printf("CHILD %d of PARENT %d executing (%s)\n", getpid(), getppid(), commands[i]);
+					parseExec(commands[i], &sigintSet);
+				}
+				else { // parent
+					if (DEBUG) printf("PARENT %d executing (parent to %s)\n", getpid(), commands[i]);
+					//TELL_CHILD(pid);
+					//WAIT_CHILD();
+					if (background != 0) { // if background, don't wait for child
+						printf("Child %d running in background\n", pid); // Display alert that child process is running in background.
+						//if (waitpid(pid, &status, WNOHANG) == -1) {
+						//	perror("unpiped waitpid error");
+						//}
+						//goto PROMPT; // return to prompt
+					} else {
+						// wait for child
+						do {
+							if (waitpid(pid, &status, 0) == -1) {
+								if (errno != ECHILD) {
+									perror("unpiped waitpid error");
+									break;
+								}
+							}
+						} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+					}
+				}
+			} // end of (if command is unpiped)		
+			
+		}// end of foreach command
+		
+	}// end of readline(prompt)
+	
+	exit (EXIT_SUCCESS);
+}
+
+static void
+sig_chld(int signo)
+{
+	pid_t pid;
+	int status;
+	if (signal(SIGCHLD, sig_chld) == SIG_ERR) { // re-establish handler
+		perror("signal(SIGCHLD) error");
+	}
+	if ((pid = wait(&status)) < 0) { // fetch child's status
+		if (errno != ECHILD) {
+			perror("SIGCHLD handler wait error");
+		}
+	} else {
+		// Display child's exit status.
+		if (DEBUG && WIFEXITED(status)) {
+			printf("child %d exited, status=%d\n", pid, WEXITSTATUS(status));
+		} else if (WIFSIGNALED(status)) {
+			printf("child %d killed by signal %d\n", pid, WTERMSIG(status));
+			siglongjmp(jmpbuf, 1); // return to prompt
+		}
+	}
+}
+
+static void
+parseExec(char *command, sigset_t *unblock)
+{
+	// stores number of args (excluding null terminator)
+	int argcount = 0;
+	// stores the standard i/o redirection filenames if necessary
+	char *stdoutFilename = NULL, *stdinFilename = NULL, *stderrFilename = NULL;
+	// array of arguments to pass to exec
+	char **args = NULL;
+	// stores the return status of the child
+	int status;
+	
+	// tokenizes the command
+	char *ptr = strtok(command, " ");
+	
+	// Build arguments array. First token = program. Rest of tokens = args.
+	while (ptr != NULL) {
+		
+		// Check for input/output redirection.
+		if (strcmp(ptr, ">") == 0 || strcmp(ptr, "1>") == 0) {
+			ptr = strtok (NULL, " ");
+			if (DEBUG) printf("stdout redirection requested to %s\n", ptr);
+			stdoutFilename = ptr;
+		} else if (strcmp(ptr, "<") == 0) {
+			ptr = strtok (NULL, " ");
+			if (DEBUG) printf("stdin redirection requested from %s\n", ptr);
+			stdinFilename = ptr;
+		} else if (strcmp(ptr, "2>") == 0) {
+			ptr = strtok (NULL, " ");
+			if (DEBUG) printf("stderr redirection requested to %s\n", ptr);
+			stderrFilename = ptr;
+		} else if (strcmp(ptr, "&>") == 0) {
+			ptr = strtok (NULL, " ");
+			if (DEBUG) printf("stdout redirection requested to %s\n", ptr);
+			if (DEBUG) printf("stderr redirection requested to %s\n", ptr);
+			stdoutFilename = ptr;
+			stderrFilename = ptr;
+		} else if (strcmp(ptr, "&") == 0) { // request to background the command
+			// don't store this language construct
+		} else { // else it's a real argument
+			argcount++;
+			args = (char**) realloc (args, argcount*sizeof(char*)); // (re)alloc the args array
+			args[argcount-1] = (char*) malloc (strlen(ptr)*sizeof(char)); // allocate space for the actual arg
+			if (args[argcount-1] == NULL) {
+				fprintf(stderr, "Error allocating memory.\n");
+				exit(1);
+			}
+			strcpy(args[argcount-1], ptr); // store the parsed arg in the arg array
+		}
+		
+		ptr = strtok (NULL, " "); // move to next token
+		
+	}
+	
+	// Add a NULL pointer at the end of the args array.
+	argcount++;
+	//args = (char**) realloc (args, sizeof(args)+sizeof(char*)); // reallocate args array
+	args[argcount-1] = (char*) malloc (sizeof(NULL)); // allocate space for the actual arg
+	if (args[argcount-1] == NULL) {
+		fprintf(stderr, "Error allocating memory.\n");
+		exit(1);
+	}
+	args[argcount-1] = NULL; // store NULL in the args array
+	
+	/*
+	 // Debugging
+	 j = 0;
+	 while (args[j] != NULL) {
+	 printf("args[%d]: %s\n", j, args[j]);
+	 j++;
+	 }//---------
+	 */
+	
+	sigprocmask(SIG_UNBLOCK, unblock, NULL); // unblock signals (SIGINT)
+	
+	int fd;
+	// Redirect stdin if necessary.
+	if (stdinFilename != NULL && strlen(stdinFilename) > 0) {
+		fd = open(stdinFilename, O_RDONLY);
+		if (fd == -1) {
+			fprintf(stderr, "myshell error: can't open %s: %s\n", stdinFilename, strerror(errno));
+			_exit(EXIT_FAILURE);
+		} else {
+			if (DEBUG) printf("setting stdin to %s\n", stdinFilename);
+			dup2(fd, 0);
+		}
+	}
+	// Redirect stdout if necessary.
+	if (stdoutFilename != NULL && strlen(stdoutFilename) > 0) {
+		fd = open(stdoutFilename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		if (fd == -1) {
+			fprintf(stderr, "myshell error: can't open %s: %s\n", stdoutFilename, strerror(errno));
+			_exit(EXIT_FAILURE);
+		} else {
+			if (DEBUG) printf("setting stdout to %s\n", stdoutFilename);
+			dup2(fd, 1);
+		}
+	}
+	// Redirect stderr if necessary.
+	if (stderrFilename != NULL && strlen(stderrFilename) > 0) {
+		fd = open(stdoutFilename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+		if (fd == -1) {
+			fprintf(stderr, "myshell error: can't open %s: %s\n", stderrFilename, strerror(errno));
+			_exit(EXIT_FAILURE);
+		} else {
+			if (DEBUG) printf("setting stderr to %s\n", stderrFilename);
+			dup2(fd, 2);
+		}
+	}
+	
+	// Execute command with args array.
+	if (execvp(args[0], args) == -1)
+		fprintf(stderr, "myshell error: %s\n", strerror(errno));
+	_exit(EXIT_FAILURE); // shouldn't reach this
+	
+}
+
+static char *trim(char *str)
+{
+	char *end;
+	
+	// Trim leading space
+	while (isspace(*str)) str++;
+	
+	// Trim trailing space
+	end = str + strlen(str) - 1;
+	while (end > str && isspace(*end)) end--;
+	
+	// Write a new null terminator
+	*(end+1) = 0;
+	
+	return str;
+}

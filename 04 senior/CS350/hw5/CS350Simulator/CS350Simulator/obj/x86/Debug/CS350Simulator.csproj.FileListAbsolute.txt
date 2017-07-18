@@ -1,0 +1,10 @@
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw4\CS350Simulator\CS350Simulator\bin\Debug\CS350Simulator.exe
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw4\CS350Simulator\CS350Simulator\bin\Debug\CS350Simulator.pdb
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw4\CS350Simulator\CS350Simulator\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw4\CS350Simulator\CS350Simulator\obj\x86\Debug\CS350Simulator.exe
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw4\CS350Simulator\CS350Simulator\obj\x86\Debug\CS350Simulator.pdb
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw5\CS350Simulator\CS350Simulator\obj\x86\Debug\CS350Simulator.exe
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw5\CS350Simulator\CS350Simulator\obj\x86\Debug\CS350Simulator.pdb
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw5\CS350Simulator\CS350Simulator\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw5\CS350Simulator\CS350Simulator\bin\Debug\CS350Simulator.exe
+D:\Dropbox\homework\college\4 senior\spring 11\cs350\hw5\CS350Simulator\CS350Simulator\bin\Debug\CS350Simulator.pdb

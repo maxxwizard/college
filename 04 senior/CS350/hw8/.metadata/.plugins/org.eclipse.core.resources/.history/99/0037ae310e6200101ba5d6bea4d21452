@@ -1,0 +1,43 @@
+import java.util.*;
+
+public class Scheduler extends Thread {
+
+	public Scheduler() {
+	}
+
+	public void run() {
+		while (true)
+		{
+			// select process Pi with smallest index i
+			// for which V[i] is "true" and wake it by
+			// signaling B[i]
+			try {
+				Main.mutexV.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			for (int i = 0; i < Main.V.length; i++)
+			{
+				if (Main.V[i] == 1)
+				{
+					// make sure CS is clear
+					try {
+						Main.mutexCS.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					// wake a thread into the CS
+					Main.B[i].release();
+				}
+			}
+			Main.mutexV.release();
+			
+			// block on semaphore S
+			try {
+				Main.S.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}

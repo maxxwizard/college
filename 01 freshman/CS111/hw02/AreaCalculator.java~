@@ -1,0 +1,29 @@
+/**
+ * AreaCalculator.java
+ * Computer Science 111, Boston University
+ * 
+ * base code provided by the course staff
+ * 
+ * algorithm implemented by: <put your name and email here> 
+ * 
+ * This program computes the area of a circular plot of land
+ * and displays it in different units.
+ */
+
+import java.util.*;
+
+public class AreaCalculator {
+    public static void main(String[] args) {
+        int diameter;      // the diameter of the plot in feet
+        
+        // Read the values from the user.
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Input the diameter, measured to the nearest foot: ");
+        diameter = scan.nextInt();
+        
+        
+        // *** Fill in the rest of the program below. ***
+
+        
+    }
+}

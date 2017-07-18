@@ -1,0 +1,7 @@
+past:
+- database creation
+- implemented the login/logout mechanism
+- implemented the feature management pages
+
+future:
+- divvy up the work amongst the team

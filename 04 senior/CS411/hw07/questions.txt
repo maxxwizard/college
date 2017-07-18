@@ -1,0 +1,12 @@
+Matthew Huynh
+U85462311
+CS411 - Keklak
+Homework 8
+
+1. Design testing in older, more established engineering disciplines are "more expensive" because the actual testing of a design requires small-scale models and simulations, which is more expensive than a simple "build" of a software project's source code.
+
+2. Projects can start out with good design, but as soon as implementation of the software begins, small changes are constantly being applied. Unforeseen complications, such as module integration issues, might lead to a dilemma where either the "high-level" design has to be re-done or "hacks" need to be applied. Eventually, the well-designed project degrades into code-and-fix.
+
+If I was a tech lead, I would be in constant talks with my subordinate developers and the documentation team. I would make sure my developers are following the design as closely as possible, or at least alerting me to design changes, so that "conceptual integrity" can be achieved. I would be passing along whatever relevant information to the documentation team so that the design can be preserved for future reference.
+
+3. Reeves is advocating a really "tight" (or loose, depending on how you look at it) spiral. Instead of the CS411 sequential, but overlapping, design-code-test cycle, Reeves is saying that the design-code-test cycle should be all the same thing. When a programmer/developer designs, he is designing and building. He is doing the same thing when he is coding and the same thing when he is testing. That is why Reeves says software is really analogous to an organic system.

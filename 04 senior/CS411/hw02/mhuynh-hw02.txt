@@ -1,0 +1,13 @@
+Matthew Huynh
+U85462311
+HW02
+
+1. Conceptual integrity is the idea that a system should follow a single vision - all the developers/implementers should be building the same system with the same goals in mind. The best analogy is that of an architect and construction workers. While the builders have some leeway in choosing how to implement something, they should be follow the architectural diagram for the building. If conceptual integrity is missing, a project will most definitely be late in delivery, and will most likely have more bugs simply due to the fact that each developer built his part of the system according to his or her own vision. A product might not even ship if there is no overall structure for a system's construction.
+
+2. McConnell recommends creating a minimum specification, devoid of extra detail such as how to implement something, how customizable a feature is, etc. This gives the developers some creative power, and makes their job easier since there are less constraints.
+
+McConnell also recommends "scrubbing" the requirements as early as possible. If something can be taken out of the feature list, then do so. By refining the minimum spec, it reduces the overall work amount.
+
+Another similar strategy to employ would be to prioritize change requests. If something needs to be added in, do the required estimate and analyze the tradeoff before adding it in. A feature doesn't need to be thrown out completely if it will not work with the current schedule - it can simply be added to the feature list of the next version.
+
+3. See requirements file mhuynh-hw02-checkers_requirements.txt.

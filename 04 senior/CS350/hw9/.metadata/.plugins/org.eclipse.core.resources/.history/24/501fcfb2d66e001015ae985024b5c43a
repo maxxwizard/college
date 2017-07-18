@@ -1,0 +1,15 @@
+
+public class MyThread extends Thread {
+	
+	public int id;
+
+	public MyThread(int i) {
+		id = i;
+	}
+
+	public void run() {
+		for (int i = 1; i <= 5; i++) {
+			Main
+		}
+	}
+}

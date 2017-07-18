@@ -1,0 +1,29 @@
+Matthew Huynh
+CS350 - HW7
+April 5, 2011
+
+Instructions: Run the program once to generate 4 text files.
+
+Exercise 1
+==========
+a) See "badThreads.txt".
+b/c) See "dekkerThreads.txt".
+d) See "petersonThreads.txt".
+
+Exercise 2
+==========
+a) This implementation works, assuming the minimum ticket chosen is 2, because 0 is reserved for threads not picking a ticket and 1 is reserved for threads picking a ticket.
+b) See "bakeryThreads.txt".
+
+Exercise 3
+==========
+22,508,745.00
+32,557,694.00
+23,016,736.50
+16,982,565.00
+22,744,420.50
+
+95th confidence interval for busy wait hits:
+23,562,032.2 plus/minus 4,925,152.22
+
+[Intel Core i5-750 ~3.21ghz]

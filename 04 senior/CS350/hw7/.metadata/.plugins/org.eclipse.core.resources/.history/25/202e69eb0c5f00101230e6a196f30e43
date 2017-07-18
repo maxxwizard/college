@@ -1,0 +1,18 @@
+
+public class BadThread extends MyThread {
+
+	public BadThread(int i, String fileName) {
+		super(i, fileName);
+	}
+
+	@Override
+	void EnterCS() {
+		// do nothing
+	}
+
+	@Override
+	void ExitCS() {
+		// do nothing
+	}
+
+}

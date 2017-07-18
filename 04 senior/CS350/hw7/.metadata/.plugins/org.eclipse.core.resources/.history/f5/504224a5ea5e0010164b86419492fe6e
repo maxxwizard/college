@@ -1,0 +1,35 @@
+
+public class DekkerThread extends MyThread {
+
+	public DekkerThread(int i) {
+		super(i);
+	}
+	
+	public void run()
+	{
+		int i = super.id;
+		int j = not(i);
+		Global.flag[i] = true;
+	    while (Global.flag[j]) {
+	       if (Global.turn == j) { 
+	         Global.flag[i] = false;
+	         while (Global.flag[j] == true) {};
+	         Global.flag[i] = true;
+	       }
+	    }
+	    
+		super.doWork();
+		
+		Global.turn = j;
+	    Global.flag[i] = false;
+	}
+	
+	private int not(int i)
+	{
+		if (i == 0)
+			return 1;
+		else
+			return 0;
+	}
+
+}

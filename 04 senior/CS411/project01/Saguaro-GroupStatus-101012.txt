@@ -1,0 +1,9 @@
+past:
+- database creation
+- coding was started
+- Matt started fleshing out the skeleton while rest of team continued learning MySQL and PHP
+
+future:
+- continue/finish coding
+- system testing
+- user documentation

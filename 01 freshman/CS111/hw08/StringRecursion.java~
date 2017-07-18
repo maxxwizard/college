@@ -1,0 +1,104 @@
+/*
+ * StringRecursion.java
+ *
+ * starter code by: Computer Science 111, Boston University
+ * 
+ * modified by: Matthew Huynh
+ * username: mhuynh
+ *
+ * A class that contains recursive methods that operate on strings.
+ */
+
+public class StringRecursion {
+    /*
+     * numOccur - a recursive method that returns the number of times 
+     * that the character ch occurs in the String str.
+     * 
+     * The main method includes two examples of using this method.
+     *
+     * You can also test this method by entering
+     * NumOccur.numOccur(ch, str) -- where ch is replaced by a char
+     * and str is replaced by a string -- in the Interactions Pane.
+     */
+    public static int numOccur(char ch, String str) {
+        // base case
+        if (str == null || str.equals("")) {
+            return 0;
+        }
+    
+        // recursive case
+        int numOccurInRest = numOccur(ch, str.substring(1));
+        if (ch == str.charAt(0)) {
+            return 1 + numOccurInRest;
+        } else {
+            return numOccurInRest;
+        }
+    }
+    
+    public static void printLetters(String str) {
+        // base case
+        if (str.equals("") || str == null)
+            return;
+        
+        // recursive case
+        System.out.print(str.charAt(0));
+        if (str.length() != 1) {
+            System.out.print(", ");
+            printLetters(str.substring(1));
+        }
+    
+    }
+    
+    public static void printLettersReverse(String str) {
+        // base case
+        if (str.equals("") || str == null)
+            return;
+        
+        // recursive case
+        if (str.length() != 1) {
+            printLettersReverse(str.substring(1));
+            System.out.print(", ");
+        }
+        System.out.print(str.charAt(0));
+     
+    }
+    
+    public static int length(String str) {
+        // base case
+        if (str.equals("") || str == null)
+            return 0;
+        
+        // recursive case
+        return 1 + length(str.substring(1));
+
+    }
+    
+    public static int indexOf(char ch, String str) {
+        // base case
+        if (str.equals("") || str == null)
+            return -1;
+        
+        // recursive case
+        if (ch == str.charAt(0)) {
+            return 0;
+        } else {
+            return 1 + indexOf(ch, str.substring(1));
+        }
+    }
+    
+    public static String repeat(String str, int n) {
+        // base case
+        if (str.equals("") || str == null || n == 0)
+            return "";
+        
+        // recursive case
+        return str + repeat(str, n-1);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("numOccur('s', \"Mississippi\") = " +
+          numOccur('s', "Mississippi"));
+        System.out.println("numOccur('e', \"Mississippi\") = " +
+          numOccur('e', "Mississippi"));                   
+    }
+}

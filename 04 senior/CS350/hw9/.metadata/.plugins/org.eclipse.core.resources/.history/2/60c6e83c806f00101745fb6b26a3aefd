@@ -1,0 +1,59 @@
+import java.util.LinkedList;
+
+/*
+ * The scheduler will maintain two queues: one for northbound and one for southbound cars.
+ * When awoken, it will select the active queue and schedule up to X cars to use the highway (as long as there is capacity).
+ * If the queue is empty or X is reached, the scheduler will then switch the active queues and repeat.
+ */
+public class Scheduler extends Thread {
+	LinkedList<Integer> northbound;
+	LinkedList<Integer> southbound;
+	Direction direction;
+
+	public Scheduler() {
+		northbound = new LinkedList<Integer>();
+		southbound = new LinkedList<Integer>();
+		direction = Direction.NORTH;
+	}
+
+	public void run() {
+		while (true)
+		{
+			// block on semaphore S
+			try {
+				Main.S.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			// make sure CS is clear
+			try {
+				//System.out.println("waiting for CS to clear");
+				Main.mutexCS.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			// select process Pi with smallest index i
+			// for which V[i] is "true" and wake it by
+			// signaling B[i]
+			try {
+				Main.mutexV.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			boolean scheduled = false;
+			for (int i = 0; i < Main.V.length && !scheduled; i++)
+			{
+				if (Main.V[i] == 1)
+				{
+					// wake a thread into the CS
+					//System.out.println("scheduling thread " + i);
+					Main.B[i].release();
+					scheduled = true;
+				}
+			}
+			Main.mutexV.release();
+		}
+	}
+}

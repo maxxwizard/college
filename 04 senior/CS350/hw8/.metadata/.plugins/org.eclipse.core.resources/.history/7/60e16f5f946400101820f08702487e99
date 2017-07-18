@@ -1,0 +1,131 @@
+
+public class CameraThread extends Thread {
+	public int numRequestsServed;
+	public int currentAngle = 0;
+	
+	public CameraThread() {
+		numRequestsServed = 0;
+	}
+
+	/*
+	 * wait on totalReqCounter
+	 * swap queues
+	 * process queue
+	 */
+	public void run() {
+		while (true)
+		{
+			// wait on totalReqCounter
+			try {
+				Main.totalReqCounter.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			// signal totalReqCounter to return it to its correct value
+			Main.totalReqCounter.release();
+			// (writer) acquire lock on buffer queue
+			try {
+				//printLine("obtaining writer lock");
+				Main.no_writers.acquire();
+				Main.no_readers.acquire();
+				//printLine("obtained writer lock");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			Main.no_readers.release();
+			// swap buffer and process queues
+			FscanQueue temp = Main.bufferQueue;
+			Main.bufferQueue = Main.processQueue;
+			Main.processQueue = temp;
+			printLine("\nswapped the two queues");
+			// (writer) release lock on buffer queue
+			Main.no_writers.release();
+			//printLine("released writer lock");
+			// process queue
+			processQueue();
+		}
+	}
+	
+	/* 
+	 * print both queues
+	 * for each reqCounts[i]
+	 * {
+	 *   if (reqCounts[i] > 0)
+	 *   {
+	 *     process request
+	 *   }
+	 *   clear reqCounts[request][]
+	 * }
+	 */
+	void processQueue()
+	{
+		printBothQueues();
+		currentAngle = 0; // reset camera
+		for (int i = 0; i < Main.processQueue.reqCounts.length; i++)
+		{
+			int waitingThreads = Main.sum(Main.processQueue.reqCounts[i]);
+			if (waitingThreads > 0)
+			{
+				serviceRequest(i, waitingThreads);
+			}
+			for (int j = 0; j < Main.processQueue.reqCounts[i].length; j++)
+			{
+				Main.processQueue.reqCounts[i][j] = 0;
+			}
+		}
+	}
+	
+	/*
+	 * Delays the thread proportional to how much the camera has to move.
+	 * Signal semaphores[requestedAngle] waitingThreads times (to wake up those clients).
+	 * Acquire totalReqCounter waitingThreads times.
+	 * Increment numRequestsServed waitingThreads times.
+	 * Then set the current angle to the serviced angle.
+	 */
+	void serviceRequest(int requestedAngle, int waitingThreads)
+	{
+		int angleDifference = requestedAngle-currentAngle;
+		try {
+			Thread.sleep(angleDifference * 100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Main.processQueue.semaphores[requestedAngle].release(waitingThreads);
+		try {
+			Main.totalReqCounter.acquire(waitingThreads);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		currentAngle = requestedAngle;
+		numRequestsServed += waitingThreads;
+		printLine("serviced angle " + requestedAngle + " for client(s) " + clientIdsForAngle(requestedAngle));
+	}
+	
+	String clientIdsForAngle(int requestedAngle)
+	{
+		String s = "";
+		for (int i = 0; i < Main.processQueue.reqCounts[requestedAngle].length; i++)
+		{
+			if (Main.processQueue.reqCounts[requestedAngle][i] > 0)
+			{
+				if (s != "")
+					s += ", ";
+				s += i;
+			}
+		}
+		return s;
+	}
+	
+	void printLine(String s)
+	{
+		System.out.println("Camera " + s);
+	}
+	
+	void printBothQueues()
+	{
+		System.out.print(" buffer: ");
+		Main.bufferQueue.printQueue();
+		System.out.print("process: ");
+		Main.processQueue.printQueue();
+	}
+}

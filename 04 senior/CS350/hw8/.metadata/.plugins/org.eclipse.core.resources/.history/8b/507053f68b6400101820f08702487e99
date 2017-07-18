@@ -1,0 +1,30 @@
+import java.util.concurrent.Semaphore;
+
+public class FscanQueue {
+	public Semaphore totalReqCounter;
+	public Semaphore[] semaphores;
+	public Semaphore mutexReqCounts;
+	public int[] reqCounts;
+	
+	public FscanQueue(int numCameraAngles)
+	{
+		mutexReqCounts = new Semaphore(1, false);
+		reqCounts = new int[numCameraAngles];
+		for (int i = 0; i < numCameraAngles; i++)
+		{
+			reqCounts[i] = 0;
+			semaphores[i] = new Semaphore(0, false);
+		}
+		totalReqCounter = new Semaphore(0, false);
+	}
+	
+	public void printQueue()
+	{
+		System.out.print("[");
+		for (int i = 0; i < reqCounts.length; i++)
+		{
+			System.out.print(reqCounts[i] + "-");
+		}
+		System.out.println("]");
+	}
+}

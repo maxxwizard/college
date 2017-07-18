@@ -1,0 +1,60 @@
+Matthew Huynh
+CS350 - HW10
+May 10, 2011
+
+Exercise 1
+===========
+a)
+transaction A locks x
+transaction B locks z
+x is greater than 0 so transaction A requests a lock on z
+transaction B locks y
+transaction B requests lock on x
+
+B is waiting for A's lock on x and A is waiting on B's lock on z
+
+b)
+Transaction A {
+  read x;
+  if x > 0 {
+      write y ;
+  else {
+      write z ;
+  }
+}
+
+Transaction B {
+  write x ;
+  read y; 
+  read z;
+}
+
+c) If we need a record Rj as reference in order to write record Ri (i < j), then we have to lock j and then release it, then lock i and then release it. Essentially, we're reducing concurrency because transactions would run slower than they could.
+
+Exercise 2
+===========
+a) A node records its own state and then sends a special snapshot request message (SRM), which is then forwarded through the entire ring. When a node receives the SRM, it sends its state to the original snapshot requester (as well as forwarding the SRM). The original node waits until it receives its original SRM, which means that it should have collected all the snapshots. The running time of this algorithm is N*T.
+
+b) The root records its own state and sends a SRM to all outbound links. When a node receives the first SRM, it sends its state back to the root and forwards the SRM on all other links. The running time is 2*log(N)*T.
+
+Exercise 3
+===========
+It is necessary to block access to a customer's data during re-mirroring because we want to preserve volume data consistency. New written data could be lost if that node containing new data failed and did not replicate its newly obtained data.
+
+Threads in the EBS control plane were being starved. These threads were most likely middlemen that carried out customers' API calls on their behalf, i.e., they did the heavy lifting to retrieve and store data.
+
+The leader is to carry out the functionality of being the most recent copy of a volume, which is then replicated to possibly many replicas for backup purposes. The leader is the working copy of a volume as well, meaning it is read and written to. It is necessary to have a one agreed-upon leader because there would be many synchronization issues if several copies were to be read and written to, e.g. one API call reads a different value than the next API call, even if the data did not actually change.
+
+The designers intentionally enforced an upper bound on the level of concurrency by making sure all accesses were directed to one copy of the data. This provides strong consistency of EBS volumes but it is slow due to the negotiation time required to coordinate all relevant parties.
+
+The amount of "Create Volume" API requests should be limited else thrasing can occur because the cluster ran out of available space too fast, i.e. there was not enough time to upgrade the servers or provision more space artificially by maybe relocating data.
+
+Exercise 4
+===========
+Map(source URL, list of destination URLs) -> (destination URL, source URL)
+For each value in the key-value pair, create a new key-value pair with the value as the key and the key as the value.
+
+Reduce(URL, list of referring URLs) -> (URL, list of referring URLs)
+Collapse key-value pairs with similar keys by combining their values (i.e., concatenating their lists of referring URLs).
+
+A worker who is done with its MAP assignment cannot start on its REDUCE functionality until all workers are done with their respective MAP assignments because we need to collapse similar keys together. If a worker collapses a certain key and contributes it to the solution, but another worker has an extra value for that exact key, then the final solution may somehow exclude that particular value.

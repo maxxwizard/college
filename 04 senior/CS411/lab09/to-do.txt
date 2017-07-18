@@ -1,0 +1,2 @@
+- create method inside the renderer API to test if a pixel point falls inside a button
+- a kinged checker design is needed

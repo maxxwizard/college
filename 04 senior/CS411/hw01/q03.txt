@@ -1,0 +1,7 @@
+Matthew Huynh
+U85462311
+HW01
+
+One skill is planning. If a software is estimated, broken into tasks, organized properly, and there's a well-established timeline for a project, it will be more likely to achieve its projected completion date.
+
+Another skill is software configuration management. If the project artifacts are managed properly (e.g. source code control), the project is more likely to succeed. SCM can be applied to other artifacts such as "requirements, plans, designs, test cases, problem reports, user documentation, data, and any other work you  use to build your product."

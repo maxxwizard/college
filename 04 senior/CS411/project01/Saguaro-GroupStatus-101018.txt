@@ -1,0 +1,7 @@
+past:
+- finished most of the coding (Features, Developers, Milestones)
+
+future:
+- finish coding (Tasks left)
+- system testing
+- user documentation

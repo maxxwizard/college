@@ -1,0 +1,47 @@
+/*
+ * TicTacToe.java
+ * 
+ * name: Matthew Huynh
+ * email: mhuynh@bu.edu
+ * 
+ * description:
+ */
+
+import java.awt.*;
+
+public class TicTacToe {
+    
+    public static void main(String[] args) {
+        DrawingPanel panel = new DrawingPanel(400, 325);
+        Graphics g = panel.getGraphics();
+        panel.setBackground(new Color(180,180,255));
+    }
+    
+    /**
+     * draws the board
+    // x and y are the coordinates of the top left corner of the board
+    // rows and cols are how many rows and columns the board has
+    // size is how big each small square that comprise the entire board is
+    public static void drawBoard(int x, int y, int rows, int cols, int size)
+    /**
+     * fillQuad - creates a filled quadrilateral using the
+     * Graphics object g.  The corners of the quadrilateral
+     * are specified by the other 8 parameters.
+     * 
+     * You will use this method when drawing an X.
+     * 
+     * IMPORTANT: The corners must be specified in an order
+     * that corresponds to starting at one corner and walking
+     * around the perimeter in either direction.
+     */
+    public static void fillQuad(Graphics g, int x1, int y1,
+      int x2, int y2, int x3, int y3, int x4, int y4) 
+    {
+        Polygon p = new Polygon();
+        p.addPoint(x1, y1);
+        p.addPoint(x2, y2);
+        p.addPoint(x3, y3);
+        p.addPoint(x4, y4);
+        g.fillPolygon(p);
+    }   
+}

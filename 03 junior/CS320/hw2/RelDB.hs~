@@ -1,0 +1,110 @@
+-- Matthew Huynh
+-- CS320 - Kfoury
+-- Assignment #2
+
+module RelDB where
+	data Value = I Int | S String | Null
+		deriving (Show, Eq) --so that you can display values and check equality
+	type Column = String
+	type Row = [Value]
+	type Table = ([Column], [Row])
+	type Op = Value -> Value -> Value
+	type LogicOp = Value -> Value -> Bool
+	type AggregateOp = [Value] -> Value
+	data OpArg = C Column | V Value
+	
+	tbl3 :: Table
+	tbl3 = (["ColA", "ColB"], [
+		   [I 1, I 1],
+		   [I 2, I 4],
+		   [I 3, I 8]
+		   ])
+	
+	tbl1 = (["Metro area", "Population"], [
+			[S "Tokyo", I 32450000],
+			[S "Seoul ", I 20550000],
+			[S "Mexico City", I 20450000],
+			[S "New York City", I 19750000],
+			[S "Mumbai", I 19200000],
+			[S "Jakarta", I 18900000],
+			[S "Sao Paulo", I 18850000],
+			[S "Delhi", I 18600000] ] )
+			
+	tbl2 = (["City", "Country"], [
+			[S "Tokyo", S "Japan"],
+			[S "Seoul ", S "South Korea"],
+			[S "Mexico City", S "Mexico"],
+			[S "New York City", S "United States"],
+			[S "Mumbai", S "India"],
+			[S "Jakarta", S "Indonesia"],
+			[S "Sao Paulo", S "Brazil"],
+			[S "Delhi", S "India"] ] )
+	
+	--1.a
+	plus :: Op
+	plus (I x) (I y) = I (x + y)
+	plus _ _ 		 = Null
+	
+	--1.b
+	ccat :: Op
+	ccat (S x) (S y) = S (x ++ y)
+	ccat _ _ 		 = Null
+	
+	--1.c
+	eqls :: LogicOp
+	eqls x y = if (x == y) then True else False
+	
+	--1.d
+	agg :: Op -> Value -> AggregateOp
+	agg op (I base) xs = foldr op (I base) xs
+	agg op (S base) xs = foldr op (S base) xs
+	
+	--2.a
+	v :: Column -> [(Column, Value)] -> Value
+	v col [] = Null
+	v col (x : xs) = if (fst x) == col then (snd x) else v col xs
+	
+	--2.b
+	select :: [Column] -> Table -> Table
+	select cols tbl = ( [ col | col <- cols, col' <- (fst tbl), col == col' ],
+						[ [ val | (col,val) <- item, col' <- cols, col' == col ]
+						  | item <- (map (zip (fst tbl)) (snd tbl)) ] )
+						  
+	--2.c
+	aggregate :: AggregateOp -> Column -> Table -> Value
+	aggregate op col tbl =	op (concat (snd (select (col:[]) tbl)))
+	
+	--2.d
+	join :: Table -> Table -> Table
+	join tbl1 tbl2 = (header, [ (list1 ++ list2) | list1 <- (snd tbl1), list2 <- (snd tbl2) ])
+					  where header = ( fst tbl1 ++ fst tbl2 )
+					  
+	--2.e
+	--extract :: OpArg -> [(Column, Value)] -> Value
+	--extract (arg :: Column) list = v arg list
+	--extract (arg :: Value) list = arg
+	
+	getRows :: Column -> Table -> [Row]
+	getRows col tbl = (snd (select (col:[]) tbl))
+	
+	only :: OpArg -> LogicOp -> OpArg -> Table -> Table
+	--case where we're looking for a value in a column
+	  -- select the column, look through column values, return rows with a match
+	only arg1 op arg2 tbl = (header, [ row | row <- getRows (extractarg2 tbl, (V arg1) <- row ])
+									where header = fst tbl
+	--case where we're comparing 2 columns
+	  -- get row list for col1, get row list for col2
+	  -- grab an item from rowList1, an item from rowList2
+	  -- output row with item1, item2 if they match
+	--case where we're comparing 2 values
+	  -- output table if 2 values are equal
+	  -- otherwise output blank table
+	
+	--two Values pattern
+	--only (V arg1) op (V arg2) tbl = (header, [ row | row <- (snd tbl), op arg1 arg2 ])
+		--							where header = fst tbl
+	--two Columns pattern
+	--only (C arg1) op (C arg2) tbl = (fst tbl, [ row | row <- (snd tbl), val1 <- (select2 arg1 tbl), val2 <- (select2 arg2 tbl), op val1 val2 ] )
+		--							where select2 c tbl = ( [ c | col' <- (fst tbl), c == col' ],
+			--													[ [ val | (col',val) <- item, c == col' ]
+				--												  | item <- (map (zip (fst tbl)) (snd tbl)) ] )

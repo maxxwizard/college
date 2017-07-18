@@ -1,0 +1,57 @@
+public class DekkerThread extends MyThread {
+
+	public DekkerThread(int i) {
+		super(i);
+	}
+
+	public void run() {
+		for (int i = 1; i <= 5; i++) {
+			printLn("starting iteration " + i);
+			EnterCS();
+			super.doWork();
+			ExitCS();
+			printLn("ending iteration " + i);
+		}
+	}
+
+	private void EnterCS() {
+		int i = super.id;
+		int j = not(i);
+
+		Global.flag[i] = true;
+		while (Global.flag[j]) {
+			if (Global.turn == j) {
+				Global.flag[i] = false;
+				while (Global.flag[j] == true) {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				Global.flag[i] = true;
+			}
+		}
+	}
+
+	private void ExitCS() {
+		int i = super.id;
+		int j = not(i);
+
+		Global.turn = j;
+		Global.flag[i] = false;
+	}
+
+	private void printLn(String s) {
+		System.out.println("Thread " + super.id + ": " + s);
+	}
+
+	private int not(int i) {
+		if (i == 0)
+			return 1;
+		else
+			return 0;
+	}
+
+}

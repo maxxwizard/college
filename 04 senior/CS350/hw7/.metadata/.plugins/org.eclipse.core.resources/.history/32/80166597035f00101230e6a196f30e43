@@ -1,0 +1,15 @@
+import java.util.concurrent.atomic.*;
+
+public class Global {
+	//public static volatile AtomicIntegerArray flag = new AtomicIntegerArray(2);
+	public static volatile int turn = 0;
+	
+	/*
+	public static void resetFlags()
+	{
+		for (boolean val : flag)
+		{
+			val = false;
+		}
+	}*/
+}

@@ -1,0 +1,14 @@
+Matthew Huynh
+CS411 - Keklak
+U85462311
+Assignment 8
+
+1. "The view from 30,000 feet" is an important design principle. If we maintain a view of the big picture, then we can maintain conceptual integrity and so the final product will be much more usable, and the road to get there is much smoother. The design principle of optimizing later will save time because one can focus on design and implementation only, which will introduce less bugs into the code because humans can only multitask up to a certain degree.
+
+2. Apple's mockups and prototypes are the same as CS411's paper UIs and prototypes. They even state that prototypes (and its corresponding code) should be thrown away instead of being used in production code.
+
+Apple's "know your audience" recommendation is similar to CS411's ethnography or user studies. In order to develop good software that works for a client, you have to know what the client requires.
+
+3. Miniature milestones are useful for keeping a project on task because it forces the developers to stay on track. It can be misused if the developers don't feel like they have control of the project because perhaps the managers are making the miniature milestones, thereby micro-managing them too much. It is most appropriate to use miniature milestones early in the project or in response to a crisis.
+
+4. See code.

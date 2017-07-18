@@ -1,0 +1,175 @@
+public class gameLogicEngineTestHarness
+{
+ public static void main(String[] args)
+ {
+  CheckersGameLogic engine = new CheckersGameLogic();
+  String command = "";
+  String response = "";
+
+  //engine.StringTokenizer101(); // a quick demo of StringTokenizer
+
+  // run tests on the game engine
+
+  /////////////////////////////////////////////
+
+  // Test #1: clear the board
+
+  command = "clear";
+
+  response = engine.doOperation(command);
+
+  // is response correct?
+
+  if ( response.equals("ok") )
+  {
+   System.out.println("Test #1 passed.");
+  }
+  else
+  {
+   System.out.println("Test #1 failed.");
+  }
+
+  /////////////////////////////////////////////
+
+  // Test #2: check state of the board
+
+  // Start with a cleared board. Do not assume any state from the previous test.
+  engine = new CheckersGameLogic();
+  
+  // Get the state of the board.
+  command = "getboardstate";
+  response = engine.doOperation(command);
+  
+  // Is the response correct for this command?
+  if (response.equals("red  black "))
+    System.out.println("Test #2 passed.");
+  else
+    System.out.println("Test #2 failed.");
+
+  /////////////////////////////////////////////
+
+  // Test #3: place a checker on the board
+
+  // Start with a cleared board.
+  engine = new CheckersGameLogic();
+
+  // Place a checker on the board.
+  command = "place red b2";
+  response = engine.doOperation(command);
+
+  // Is the response correct for this command?
+  if (response.equals("ok"))
+    System.out.println("Test #3 passed.");
+  else
+    System.out.println("Test #3 failed.");
+
+  /////////////////////////////////////////////
+
+  // Test #4a: check state of the board
+
+  // Start with a cleared board.
+  engine = new CheckersGameLogic();
+
+  // Get the state of the board.
+  command = "getboardstate";
+  response = engine.doOperation(command);
+
+  // Is the response correct for this command?
+  if (response.equals("red  black "))
+    System.out.println("Test #4a passed.");
+  else
+    System.out.println("Test #4a failed.");
+
+  /////////////////////////////////////////////
+
+  // Test #4b: check state of the board
+
+  // Start with a cleared board.
+  engine = new CheckersGameLogic();
+
+  // Place a checker on the board.
+  command = "place red b2";
+  response = engine.doOperation(command);
+
+  // Get the state of the board.
+  command = "getboardstate";
+  response = engine.doOperation(command);
+
+  // Is the response correct for this command?
+  if (response.equals("red b2 black "))
+    System.out.println("Test #4b passed.");
+  else
+    System.out.println("Test #4b failed.");
+
+  /////////////////////////////////////////////
+
+  // Test #5: set up board to start a game
+  // Assumptions:
+  // - From bottom to top, rows increase from 1 to 8.
+  // - From left to right, columns increase from a to h.
+
+  // Start with a cleared board.
+  engine = new CheckersGameLogic();
+  
+  // Place red checkers at top.
+  command = "place red b8";
+  engine.doOperation(command);
+  command = "place red d8";
+  engine.doOperation(command);
+  command = "place red f8";
+  engine.doOperation(command);
+  command = "place red h8";
+  engine.doOperation(command);
+  command = "place red a7";
+  engine.doOperation(command);
+  command = "place red c7";
+  engine.doOperation(command);
+  command = "place red e7";
+  engine.doOperation(command);
+  command = "place red g7";
+  engine.doOperation(command);
+  command = "place red c6";
+  engine.doOperation(command);
+  
+  // Place black checkers at bottom.
+  command = "place black a3";
+  engine.doOperation(command);
+  command = "place black c3";
+  engine.doOperation(command);
+  command = "place black e3";
+  engine.doOperation(command);
+  command = "place black g3";
+  engine.doOperation(command);
+  command = "place black b2";
+  engine.doOperation(command);
+  command = "place black d2";
+  engine.doOperation(command);
+  command = "place black f2";
+  engine.doOperation(command);
+  command = "place black h2";
+  engine.doOperation(command);
+  command = "place black a1";
+  engine.doOperation(command);
+  command = "place black c1";
+  engine.doOperation(command);
+  command = "place black e1";
+  engine.doOperation(command);
+  command = "place black g1";
+  engine.doOperation(command);
+  
+  // Get the state of the board.
+  command = "getboardstate";
+  response = engine.doOperation(command);
+  
+  // Is the response correct for this command?
+  if (response.equals("red b8 d8 f8 h8 a7 c7 e7 g7 c6 black a3 c3 e3 g3 b2 d2 f2 h2 a1 c1 e1 g1"))
+    System.out.println("Test #5 passed.");
+  else
+    System.out.println("Test #5 failed.");
+
+  /////////////////////////////////////////////
+
+  // many more tests...
+
+ }
+}
